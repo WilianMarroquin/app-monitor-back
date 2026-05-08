@@ -11,6 +11,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     require __DIR__.'/admin/api.php';
 
+
+    Route::apiResource('areas', App\Http\Controllers\Api\AreaApiController::class)
+        ->parameters(['areas' => 'area']);
+
 });
 
 require __DIR__.'/auth.php';
@@ -20,6 +24,7 @@ Route::prefix('libres')->group(function () {
     require __DIR__.'/admin/Configuraciones/api_libres.php';
 
 });
+
 
 
 

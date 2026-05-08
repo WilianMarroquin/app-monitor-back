@@ -1,12 +1,12 @@
 <?php
 
-namespace {{ seederNamespace }};
+namespace Database\Seeders\permisos;
 
+use App\Models\Permission;
 use App\Models\Rol;
 use Illuminate\Database\Seeder;
-use App\Models\Permission;
 
-class {{ seederPermisosName }} extends Seeder
+class AreaPermisosTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,21 +17,22 @@ class {{ seederPermisosName }} extends Seeder
     {
 
         $permisos = [
-            'Ver {{ variableTitleCase }}',
-            'Crear {{ variableTitleCase }}',
-            'Editar {{ variableTitleCase }}',
-            'Eliminar {{ variableTitleCase }}',
+            'Listar Areas',
+            'Ver Areas',
+            'Crear Areas',
+            'Editar Areas',
+            'Eliminar Areas',
         ];
 
         foreach ($permisos as $permiso) {
             Permission::create([
                 'name' => $permiso,
-                'subject' => '{{ model }}',
+                'subject' => 'Area',
                 'guard_name' => 'web',
             ]);
         }
 
-        $admin = Role::where('name', Rol::ADMIN)
+        $admin = Rol::where('name', Rol::ADMINISTRADOR)
             ->first();
 
         $admin->givePermissionTo($permisos);

@@ -129,6 +129,28 @@ class MenuOpcionesTableSeeder extends Seeder
             "parent_id" => 8
         ]);
 
+        $catalogos = MenuOpcion::create([
+            "id" => 10,
+            "titulo" => "Catálogos",
+            "icono" => "ri-settings-3-fill",
+            "ruta" => null,
+            "orden" => 1,
+            "action" => "Listar Modulo Catálogos",
+            "subject" => "Configuracion",
+            "parent_id" => null
+        ]);
+
+        MenuOpcion::create([
+            "id" => 10,
+            "titulo" => "Areas",
+            "icono" => "ri-settings-3-fill",
+            "ruta" => 'areas',
+            "orden" => 1,
+            "action" => "Listar Areas",
+            "subject" => "Area",
+            "parent_id" => $catalogos->id
+        ]);
+
         MenuOpcion::create([
             "id" => 11,
             "titulo" => null,

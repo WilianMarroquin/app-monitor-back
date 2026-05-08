@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('internal_ip', 15)->nullable();
             $table->string('external_ip', 15)->nullable();
-            $table->enum('entorno', ['desarrollo', 'pruduccion'])->nullable();
+            $table->enum('entorno', ['desarrollo', 'produccion'])->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
