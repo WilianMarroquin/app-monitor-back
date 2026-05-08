@@ -10,6 +10,7 @@ use App\Http\Requests\Api\UpdateNotificationContactApiRequest;
 use App\Models\NotificationContact;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 /**
@@ -40,15 +41,17 @@ class NotificationContactApiController extends AppbaseController implements HasM
     {
         $notification_contacts = QueryBuilder::for(NotificationContact::class)
             ->allowedFilters([
-    'nombres',
-    'apellidos',
-    'telefono'
-])
+                'nombres',
+                'apellidos',
+                'telefono',
+                AllowedFilter::scope('buscarPorNombreCompleto', 'buscarPorNombreCompleto'),
+                AllowedFilter::scope('sinPersonasAsignadasIds', 'sinPersonasAsignadasIds')
+            ])
             ->allowedSorts([
-    'nombres',
-    'apellidos',
-    'telefono'
-])
+                'nombres',
+                'apellidos',
+                'telefono'
+            ])
             ->defaultSort('-id') // Ordenar por defecto por fecha descendente
             ->Paginate(request('page.size') ?? 10);
 
@@ -79,9 +82,9 @@ class NotificationContactApiController extends AppbaseController implements HasM
     }
 
     /**
-    * Update the specified NotificationContact in storage.
-    * PUT/PATCH /notification_contacts/{id}
-    */
+     * Update the specified NotificationContact in storage.
+     * PUT/PATCH /notification_contacts/{id}
+     */
     public function update(UpdateNotificationContactApiRequest $request, $id): JsonResponse
     {
         $notificationcontact = NotificationContact::findOrFail($id);
@@ -90,9 +93,9 @@ class NotificationContactApiController extends AppbaseController implements HasM
     }
 
     /**
-    * Remove the specified NotificationContact from storage.
-    * DELETE /notification_contacts/{id}
-    */
+     * Remove the specified NotificationContact from storage.
+     * DELETE /notification_contacts/{id}
+     */
     public function destroy(NotificationContact $notificationcontact): JsonResponse
     {
         $notificationcontact->delete();

@@ -4,11 +4,12 @@ namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $name
@@ -39,11 +40,10 @@ class Area extends Model
     protected $table = 'areas';
 
 
-    protected $fillable =
-        [
-    'name',
-    'description'
-];
+    protected $fillable = [
+        'name',
+        'description'
+    ];
 
 
     /**
@@ -51,8 +51,7 @@ class Area extends Model
      *
      * @var array
      */
-    protected $casts =
-        [
+    protected $casts = [
         'id' => 'integer',
         'name' => 'string',
         'description' => 'string',
@@ -62,17 +61,16 @@ class Area extends Model
     ];
 
 
-
     /**
      * Validation rules
      *
      * @var array
      */
-    public static $rules =
-    [
-    'name' => 'required|string|max:120',
-    'description' => 'nullable|string',
-];
+    public static $rules = [
+        'name' => 'required|string|max:120',
+        'description' => 'nullable|string',
+        'personas_asignadas_ids' => 'nullable|array',
+    ];
 
 
     /**
@@ -80,7 +78,7 @@ class Area extends Model
      *
      * @var array
      */
-    public static $messages =[
+    public static $messages = [
 
     ];
 
@@ -90,6 +88,16 @@ class Area extends Model
      *
      * @var array
      */
-    
+
+    public function contactosAsignados(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            NotificationContact::class,
+            'area_notification_contact',
+            'area_id',
+            'notification_contact_id'
+        );
+    }
+
 
 }

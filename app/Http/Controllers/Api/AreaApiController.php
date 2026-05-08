@@ -36,17 +36,20 @@ class AreaApiController extends AppbaseController implements HasMiddleware
      * Display a listing of the Areas.
      * GET|HEAD /areas
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
         $areas = QueryBuilder::for(Area::class)
             ->allowedFilters([
-    'name',
-    'description'
-])
+                'name',
+                'description'
+            ])
             ->allowedSorts([
-    'name',
-    'description'
-])
+                'name',
+                'description'
+            ])
+            ->allowedIncludes([
+                'contactosAsignados'
+            ])
             ->defaultSort('-id') // Ordenar por defecto por fecha descendente
             ->Paginate(request('page.size') ?? 10);
 
@@ -64,6 +67,10 @@ class AreaApiController extends AppbaseController implements HasMiddleware
 
         $areas = Area::create($input);
 
+        if(isset($input['personas_asignadas_ids'])) {
+            $areas->contactosAsignados()->sync($input['personas_asignadas_ids']);
+        }
+
         return $this->sendResponse($areas->toArray(), 'Area creado con éxito.');
     }
 
@@ -73,13 +80,15 @@ class AreaApiController extends AppbaseController implements HasMiddleware
      */
     public function show(Area $area)
     {
+        $area->load('contactosAsignados');
+
         return $this->sendResponse($area->toArray(), 'Area recuperado con éxito.');
     }
 
     /**
-    * Update the specified Area in storage.
-    * PUT/PATCH /areas/{id}
-    */
+     * Update the specified Area in storage.
+     * PUT/PATCH /areas/{id}
+     */
     public function update(UpdateAreaApiRequest $request, $id): JsonResponse
     {
         $area = Area::findOrFail($id);
@@ -88,9 +97,9 @@ class AreaApiController extends AppbaseController implements HasMiddleware
     }
 
     /**
-    * Remove the specified Area from storage.
-    * DELETE /areas/{id}
-    */
+     * Remove the specified Area from storage.
+     * DELETE /areas/{id}
+     */
     public function destroy(Area $area): JsonResponse
     {
         $area->delete();

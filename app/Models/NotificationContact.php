@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $nombres
@@ -41,12 +41,11 @@ class NotificationContact extends Model
     protected $table = 'notification_contacts';
 
 
-    protected $fillable =
-        [
-    'nombres',
-    'apellidos',
-    'telefono'
-];
+    protected $fillable = [
+        'nombres',
+        'apellidos',
+        'telefono'
+    ];
 
 
     /**
@@ -54,8 +53,7 @@ class NotificationContact extends Model
      *
      * @var array
      */
-    protected $casts =
-        [
+    protected $casts = [
         'id' => 'integer',
         'nombres' => 'string',
         'apellidos' => 'string',
@@ -66,18 +64,16 @@ class NotificationContact extends Model
     ];
 
 
-
     /**
      * Validation rules
      *
      * @var array
      */
-    public static $rules =
-    [
-    'nombres' => 'required|string|max:150',
-    'apellidos' => 'required|string|max:150',
-    'telefono' => 'required|string|max:8',
-];
+    public static $rules = [
+        'nombres' => 'required|string|max:150',
+        'apellidos' => 'required|string|max:150',
+        'telefono' => 'required|string|max:8',
+    ];
 
 
     /**
@@ -85,8 +81,12 @@ class NotificationContact extends Model
      *
      * @var array
      */
-    public static $messages =[
+    public static $messages = [
 
+    ];
+
+    protected $appends = [
+        'nombre_completo'
     ];
 
 
@@ -95,6 +95,21 @@ class NotificationContact extends Model
      *
      * @var array
      */
-    
+
+    public function getNombreCompletoAttribute(): string
+    {
+        return $this->nombres . ' ' . $this->apellidos;
+    }
+
+    public function scopeBuscarPorNombreCompleto($builder, $nombreCompleto)
+    {
+        return $builder->whereRaw("CONCAT(nombres, ' ', apellidos) LIKE ?", ["%$nombreCompleto%"]);
+    }
+
+    public function ScopeSinPersonasAsignadasIds($builder, $ids)
+    {
+        $idsArray = explode('-', $ids);
+        return $builder->whereNotIn('id', $idsArray);
+    }
 
 }
