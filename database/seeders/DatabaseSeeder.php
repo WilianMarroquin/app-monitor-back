@@ -14,6 +14,8 @@ class DatabaseSeeder extends Seeder
     {
 
         $this->call(IndexTableSeeder::class);
+        $this->call(ServerTableSeeder::class);
+        $this->call(ServiceTableSeeder::class);
 
     }
 }

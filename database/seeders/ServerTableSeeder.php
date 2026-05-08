@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Server;
 use Illuminate\Database\Seeder;
 
 class ServerTableSeeder extends Seeder
@@ -13,6 +14,21 @@ class ServerTableSeeder extends Seeder
      */
     public function run()
     {
-        //agregar la logica para crear registros en la tabla
+        Server::firstOrCreate([
+            'name' => 'Apps2',
+            'internal_ip' => 'apps2.mineducgt.local'
+        ]);
+        Server::firstOrCreate([
+            'name' => 'AWS',
+            'internal_ip' => 'SISTEMA DE REGISTROS EDUCATIVOS ADMINISTRATIVO'
+        ]);
+        Server::firstOrCreate([
+            'name' => 'DEV-01',
+            'internal_ip' => '192.168.2.10'
+        ]);
+        Server::firstOrCreate([
+            'name' => 'sistemas5',
+            'internal_ip' => 'Sistemas5'
+        ]);
     }
 }

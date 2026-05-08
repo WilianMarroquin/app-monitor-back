@@ -15,8 +15,8 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('name', 150);
             $table->text('description')->nullable();
-            $table->string('internal_ip', 15)->nullable();
-            $table->string('external_ip', 15)->nullable();
+            $table->string('internal_ip', 100)->nullable();
+            $table->string('external_ip', 100)->nullable();
             $table->enum('entorno', ['desarrollo', 'produccion'])->nullable();
             $table->timestamps();
             $table->softDeletes();
