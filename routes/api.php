@@ -22,6 +22,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('servers', App\Http\Controllers\Api\ServerApiController::class)
         ->parameters(['servers' => 'server']);
 
+    Route::apiResource('services', App\Http\Controllers\Api\ServiceApiController::class)
+        ->parameters(['services' => 'service']);
+
 });
 
 require __DIR__.'/auth.php';
@@ -31,6 +34,7 @@ Route::prefix('libres')->group(function () {
     require __DIR__.'/admin/Configuraciones/api_libres.php';
 
 });
+
 
 
 

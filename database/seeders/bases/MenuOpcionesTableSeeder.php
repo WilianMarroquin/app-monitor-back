@@ -10,7 +10,7 @@ class MenuOpcionesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     * Para ejct
+     * Para ejccutar este seeder, se debe ejecutar el comando: php artisan db:seed --class="Database\Seeders\bases\MenuOpcionesTableSeeder"
      */
     public function run(): void
     {
@@ -19,7 +19,6 @@ class MenuOpcionesTableSeeder extends Seeder
         MenuOpcion::truncate();
 
         MenuOpcion::create([
-            "id" => 1,
             "titulo" => "Inicio",
             "icono" => "ri-home-8-line",
             "ruta" => "index",
@@ -30,7 +29,6 @@ class MenuOpcionesTableSeeder extends Seeder
         ]);
 
         MenuOpcion::create([
-            "id" => 2,
             "titulo" => null,
             "icono" => null,
             "ruta" => null,
@@ -42,7 +40,6 @@ class MenuOpcionesTableSeeder extends Seeder
         ]);
 
         MenuOpcion::create([
-            "id" => 3,
             "titulo" => "Modulo Usuarios",
             "icono" => "ri-group-line",
             "ruta" => null,
@@ -54,7 +51,6 @@ class MenuOpcionesTableSeeder extends Seeder
 
 // Submenús del Modulo Usuarios
         MenuOpcion::create([
-            "id" => 4,
             "titulo" => "Usuarios",
             "icono" => "ri-list-ordered-2",
             "ruta" => "admin-modulo-usuarios-usuarios",
@@ -65,7 +61,6 @@ class MenuOpcionesTableSeeder extends Seeder
         ]);
 
         MenuOpcion::create([
-            "id" => 5,
             "titulo" => "Roles",
             "icono" => "ri-folder-shield-2-line",
             "ruta" => "admin-modulo-usuarios-roles",
@@ -76,7 +71,6 @@ class MenuOpcionesTableSeeder extends Seeder
         ]);
 
         MenuOpcion::create([
-            "id" => 7,
             "titulo" => "Permisos",
             "icono" => "ri-file-shield-2-fill",
             "ruta" => "admin-modulo-usuarios-permisos",
@@ -87,7 +81,6 @@ class MenuOpcionesTableSeeder extends Seeder
         ]);
 
         MenuOpcion::create([
-            "id" => 6,
             "titulo" => "Estados de usuarios",
             "icono" => "ri-folder-user-fill",
             "ruta" => "admin-modulo-usuarios-usuario-estados",
@@ -98,7 +91,6 @@ class MenuOpcionesTableSeeder extends Seeder
         ]);
 
         MenuOpcion::create([
-            "id" => 8,
             "titulo" => "Configuraciones",
             "icono" => "ri-folder-settings-fill",
             "ruta" => null,
@@ -109,7 +101,6 @@ class MenuOpcionesTableSeeder extends Seeder
         ]);
 
         MenuOpcion::create([
-            "id" => 9,
             "titulo" => "Opciones Menu",
             "icono" => "ri-apps-2-add-line",
             "ruta" => "admin-configuraciones-menu",
@@ -120,7 +111,6 @@ class MenuOpcionesTableSeeder extends Seeder
         ]);
 
         MenuOpcion::create([
-            "id" => 10,
             "titulo" => "Generales",
             "icono" => "ri-settings-3-fill",
             "ruta" => "admin-configuraciones-generales",
@@ -131,7 +121,6 @@ class MenuOpcionesTableSeeder extends Seeder
         ]);
 
         $catalogos = MenuOpcion::create([
-            "id" => 10,
             "titulo" => "Catálogos",
             "icono" => "ri-settings-3-fill",
             "ruta" => null,
@@ -142,7 +131,6 @@ class MenuOpcionesTableSeeder extends Seeder
         ]);
 
         MenuOpcion::create([
-            "id" => 10,
             "titulo" => "Areas",
             "icono" => "ri-settings-3-fill",
             "ruta" => 'areas',
@@ -153,7 +141,6 @@ class MenuOpcionesTableSeeder extends Seeder
         ]);
 
         MenuOpcion::create([
-            "id" => 10,
             "titulo" => "Contactos",
             "icono" => "ri-settings-3-fill",
             "ruta" => 'notification-contacts',
@@ -164,7 +151,6 @@ class MenuOpcionesTableSeeder extends Seeder
         ]);
 
         MenuOpcion::create([
-            "id" => 10,
             "titulo" => "Servidores",
             "icono" => "ri-settings-3-fill",
             "ruta" => 'servers',
@@ -175,7 +161,6 @@ class MenuOpcionesTableSeeder extends Seeder
         ]);
 
         MenuOpcion::create([
-            "id" => 2,
             "titulo" => null,
             "icono" => null,
             "ruta" => null,
@@ -187,7 +172,16 @@ class MenuOpcionesTableSeeder extends Seeder
         ]);
 
         MenuOpcion::create([
-            "id" => 11,
+            "titulo" => "Servicios",
+            "icono" => "ri-settings-3-fill",
+            "ruta" => 'services',
+            "orden" => 1,
+            "action" => "Listar Services",
+            "subject" => "Service",
+            "parent_id" => null
+        ]);
+
+        MenuOpcion::create([
             "titulo" => null,
             "icono" => null,
             "ruta" => null,
@@ -199,7 +193,6 @@ class MenuOpcionesTableSeeder extends Seeder
         ]);
 
         MenuOpcion::create([
-            "id" => 12,
             "titulo" => "Developers",
             "icono" => "ri-tools-fill",
             "ruta" => "second-page",
@@ -210,7 +203,6 @@ class MenuOpcionesTableSeeder extends Seeder
         ]);
 
         MenuOpcion::create([
-            "id" => 13,
             "titulo" => "Configuraciones",
             "icono" => "ri-settings-5-fill",
             "ruta" => "dev-configuraciones",
@@ -221,7 +213,6 @@ class MenuOpcionesTableSeeder extends Seeder
         ]);
 
         MenuOpcion::create([
-            "id" => 14,
             "titulo" => "Componentes",
             "icono" => "ri-code-box-line",
             "ruta" => "dev-componentes",
@@ -230,8 +221,6 @@ class MenuOpcionesTableSeeder extends Seeder
             "subject" => "Desarrollo",
             "parent_id" => 12
         ]);
-
-
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

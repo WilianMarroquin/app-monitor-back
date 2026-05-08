@@ -1,0 +1,115 @@
+<?php
+
+namespace App\Models;
+
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+/**
+ * 
+ *
+ * @property int $id
+ * @property string $name
+ * @property string|null $description
+ * @property string $type
+ * @property int $is_active
+ * @property string|null $testMethod
+ * @property string|null $httpMethod
+ * @property int|null $created_at
+ * @property int|null $updated_at
+ * @property int|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereHttpMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereTestMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Service withoutTrashed()
+ * @mixin \Eloquent
+ */
+class Service extends Model
+{
+
+    use SoftDeletes;
+    use HasFactory;
+
+    protected $table = 'services';
+
+
+    protected $fillable =
+        [
+    'name',
+    'description',
+    'type',
+    'is_active',
+    'testMethod',
+    'httpMethod'
+];
+
+
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts =
+        [
+        'id' => 'integer',
+        'name' => 'string',
+        'description' => 'string',
+        'type' => 'string',
+        'is_active' => 'integer',
+        'testMethod' => 'string',
+        'httpMethod' => 'string',
+        'created_at' => 'timestamp',
+        'updated_at' => 'timestamp',
+        'deleted_at' => 'timestamp',
+    ];
+
+
+
+    /**
+     * Validation rules
+     *
+     * @var array
+     */
+    public static $rules =
+    [
+    'name' => 'required|string|max:255',
+    'description' => 'nullable|string',
+    'type' => 'required|string',
+    'is_active' => 'required|integer',
+    'testMethod' => 'nullable|string|max:45',
+    'httpMethod' => 'nullable|string|max:45',
+];
+
+
+    /**
+     * Custom messages for validation
+     *
+     * @var array
+     */
+    public static $messages =[
+
+    ];
+
+
+    /**
+     * Accessor for relationships
+     *
+     * @var array
+     */
+    
+
+}
