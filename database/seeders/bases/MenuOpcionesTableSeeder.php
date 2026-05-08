@@ -54,7 +54,7 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => "Usuarios",
             "icono" => "ri-list-ordered-2",
             "ruta" => "admin-modulo-usuarios-usuarios",
-            "orden" => 0,
+            "orden" => 3,
             "action" => "Listar Usuarios",
             "subject" => "User",
             "parent_id" => 3
@@ -64,7 +64,7 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => "Roles",
             "icono" => "ri-folder-shield-2-line",
             "ruta" => "admin-modulo-usuarios-roles",
-            "orden" => 1,
+            "orden" => 5,
             "action" => "Listar Roles",
             "subject" => "Rol",
             "parent_id" => 3
@@ -74,7 +74,7 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => "Permisos",
             "icono" => "ri-file-shield-2-fill",
             "ruta" => "admin-modulo-usuarios-permisos",
-            "orden" => 2,
+            "orden" => 6,
             "action" => "Listar Permisos",
             "subject" => "Permission",
             "parent_id" => 3
@@ -84,7 +84,7 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => "Estados de usuarios",
             "icono" => "ri-folder-user-fill",
             "ruta" => "admin-modulo-usuarios-usuario-estados",
-            "orden" => 3,
+            "orden" => 7,
             "action" => "Listar Usuario Estados",
             "subject" => "UserEstado",
             "parent_id" => 3
@@ -94,7 +94,7 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => "Configuraciones",
             "icono" => "ri-folder-settings-fill",
             "ruta" => null,
-            "orden" => 3,
+            "orden" => 8,
             "action" => "Ver Modulo Configuracion",
             "subject" => "Configuracion",
             "parent_id" => null
@@ -104,7 +104,7 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => "Opciones Menu",
             "icono" => "ri-apps-2-add-line",
             "ruta" => "admin-configuraciones-menu",
-            "orden" => 0,
+            "orden" => 9,
             "action" => "Listar Menu Opciones",
             "subject" => "Menu Opcion",
             "parent_id" => 8
@@ -114,7 +114,7 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => "Generales",
             "icono" => "ri-settings-3-fill",
             "ruta" => "admin-configuraciones-generales",
-            "orden" => 1,
+            "orden" => 10,
             "action" => "Listar Configuraciones Generales",
             "subject" => "Configuracion",
             "parent_id" => 8
@@ -124,7 +124,7 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => "Catálogos",
             "icono" => "ri-settings-3-fill",
             "ruta" => null,
-            "orden" => 1,
+            "orden" => 11,
             "action" => "Listar Modulo Catálogos",
             "subject" => "Configuracion",
             "parent_id" => null
@@ -134,7 +134,7 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => "Areas",
             "icono" => "ri-settings-3-fill",
             "ruta" => 'areas',
-            "orden" => 1,
+            "orden" => 12,
             "action" => "Listar Areas",
             "subject" => "Area",
             "parent_id" => $catalogos->id
@@ -144,7 +144,7 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => "Contactos",
             "icono" => "ri-settings-3-fill",
             "ruta" => 'notification-contacts',
-            "orden" => 1,
+            "orden" => 13,
             "action" => "Listar Notification Contactes",
             "subject" => "NotificationContact",
             "parent_id" => $catalogos->id
@@ -154,7 +154,7 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => "Servidores",
             "icono" => "ri-settings-3-fill",
             "ruta" => 'servers',
-            "orden" => 1,
+            "orden" => 14,
             "action" => "Listar Serveres",
             "subject" => "Server",
             "parent_id" => $catalogos->id
@@ -164,7 +164,7 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => null,
             "icono" => null,
             "ruta" => null,
-            "orden" => 1,
+            "orden" => 15,
             "titulo_seccion" => "Core",
             "action" => "Ver Modulo Core",
             "subject" => "Core",
@@ -175,7 +175,7 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => "Servicios",
             "icono" => "ri-settings-3-fill",
             "ruta" => 'services',
-            "orden" => 1,
+            "orden" => 16,
             "action" => "Listar Services",
             "subject" => "Service",
             "parent_id" => null
@@ -185,18 +185,18 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => null,
             "icono" => null,
             "ruta" => null,
-            "orden" => 4,
+            "orden" => 17,
             "titulo_seccion" => "Modulo Programación",
             "action" => "Ver Modulo Desarrollo",
             "subject" => "Desarrollo",
             "parent_id" => null
         ]);
 
-        MenuOpcion::create([
+        $developers = MenuOpcion::create([
             "titulo" => "Developers",
             "icono" => "ri-tools-fill",
             "ruta" => "second-page",
-            "orden" => 5,
+            "orden" => 18,
             "action" => "Ver Modulo Desarrollo",
             "subject" => "Desarrollo",
             "parent_id" => null
@@ -206,20 +206,20 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => "Configuraciones",
             "icono" => "ri-settings-5-fill",
             "ruta" => "dev-configuraciones",
-            "orden" => 0,
+            "orden" => 19,
             "action" => "Listar Configuraciones",
             "subject" => "Configuracion",
-            "parent_id" => 12
+            "parent_id" => $developers->id
         ]);
 
         MenuOpcion::create([
             "titulo" => "Componentes",
             "icono" => "ri-code-box-line",
             "ruta" => "dev-componentes",
-            "orden" => 1,
+            "orden" => 20,
             "action" => "Listar Componentes",
             "subject" => "Desarrollo",
-            "parent_id" => 12
+            "parent_id" => $developers->id
         ]);
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
