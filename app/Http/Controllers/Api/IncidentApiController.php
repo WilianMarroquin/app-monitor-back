@@ -110,4 +110,22 @@ class IncidentApiController extends AppbaseController implements HasMiddleware
         $incident->delete();
         return $this->sendResponse(null, 'Incident eliminado con éxito.');
     }
+
+    public function registrarComentario(Request $request)
+    {
+        $request->validate([
+            'incident_id' => 'required|exists:incidents,id',
+            'description' => 'required|string',
+        ]);
+
+        $incident = Incident::findOrFail($request->input('incident_id'));
+
+        $comentario = $incident->comentarios()->create([
+            'user_id' => auth()->id(),
+            'description' => $request->input('description'),
+        ]);
+
+        return $this->sendResponse($comentario, 'Comentario registrado con éxito.');
+
+    }
 }

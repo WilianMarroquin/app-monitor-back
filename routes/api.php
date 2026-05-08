@@ -25,8 +25,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('services', App\Http\Controllers\Api\ServiceApiController::class)
         ->parameters(['services' => 'service']);
 
+    Route::post('incidents/registrar/Comentario', [App\Http\Controllers\Api\IncidentApiController::class, 'registrarComentario']);
+
     Route::apiResource('incidents', App\Http\Controllers\Api\IncidentApiController::class)
         ->parameters(['incidents' => 'incident']);
+
 
 });
 

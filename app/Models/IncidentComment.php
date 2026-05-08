@@ -44,7 +44,8 @@ class IncidentComment extends Model
     protected $fillable =
         [
     'description',
-    'incident_id'
+    'incident_id',
+    'user_id'
 ];
 
 

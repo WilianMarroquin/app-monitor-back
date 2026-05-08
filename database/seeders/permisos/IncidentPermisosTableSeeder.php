@@ -21,6 +21,7 @@ class IncidentPermisosTableSeeder extends Seeder
             'Ver Incidentes',
             'Crear Incidentes',
             'Editar Incidentes',
+            'Registrar Comentario Incidentes',
             'Eliminar Incidentes',
         ];
 

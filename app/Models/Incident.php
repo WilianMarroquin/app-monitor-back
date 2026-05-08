@@ -122,7 +122,7 @@ class Incident extends Model
 
     public function comentarios(): HasMany
     {
-        return $this->hasMany(IncidentComment::class, 'incident_id', 'id');
+        return $this->hasMany(IncidentComment::class, 'incident_id', 'id')->orderBy('created_at', 'desc');
 
     }
 
