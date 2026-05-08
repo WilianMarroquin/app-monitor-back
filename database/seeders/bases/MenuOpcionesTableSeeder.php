@@ -122,7 +122,7 @@ class MenuOpcionesTableSeeder extends Seeder
 
         $catalogos = MenuOpcion::create([
             "titulo" => "Catálogos",
-            "icono" => "ri-settings-3-fill",
+            "icono" => "ri-folder-4-fill",
             "ruta" => null,
             "orden" => 11,
             "action" => "Listar Modulo Catálogos",
@@ -132,7 +132,7 @@ class MenuOpcionesTableSeeder extends Seeder
 
         MenuOpcion::create([
             "titulo" => "Areas",
-            "icono" => "ri-settings-3-fill",
+            "icono" => "ri-building-2-fill",
             "ruta" => 'areas',
             "orden" => 12,
             "action" => "Listar Areas",
@@ -142,7 +142,7 @@ class MenuOpcionesTableSeeder extends Seeder
 
         MenuOpcion::create([
             "titulo" => "Contactos",
-            "icono" => "ri-settings-3-fill",
+            "icono" => "ri-contacts-book-2-fill",
             "ruta" => 'notification-contacts',
             "orden" => 13,
             "action" => "Listar Notification Contactes",
@@ -152,7 +152,7 @@ class MenuOpcionesTableSeeder extends Seeder
 
         MenuOpcion::create([
             "titulo" => "Servidores",
-            "icono" => "ri-settings-3-fill",
+            "icono" => "ri-server-fill",
             "ruta" => 'servers',
             "orden" => 14,
             "action" => "Listar Serveres",
@@ -173,7 +173,7 @@ class MenuOpcionesTableSeeder extends Seeder
 
         MenuOpcion::create([
             "titulo" => "Servicios",
-            "icono" => "ri-settings-3-fill",
+            "icono" => "ri-service-fill",
             "ruta" => 'services',
             "orden" => 16,
             "action" => "Listar Services",
