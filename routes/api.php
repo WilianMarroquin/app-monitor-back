@@ -15,6 +15,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('areas', App\Http\Controllers\Api\AreaApiController::class)
         ->parameters(['areas' => 'area']);
 
+    Route::apiResource('notification_contacts', App\Http\Controllers\Api\NotificationContactApiController::class)
+        ->parameters(['notification_contacts' => 'notificationcontact']);
+
 });
 
 require __DIR__.'/auth.php';
@@ -24,6 +27,7 @@ Route::prefix('libres')->group(function () {
     require __DIR__.'/admin/Configuraciones/api_libres.php';
 
 });
+
 
 
 
