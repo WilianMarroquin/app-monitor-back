@@ -35,16 +35,3 @@ Route::prefix('libres')->group(function () {
 
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
