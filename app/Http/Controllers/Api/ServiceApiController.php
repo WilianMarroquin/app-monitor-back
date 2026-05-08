@@ -10,6 +10,8 @@ use App\Http\Requests\Api\UpdateServiceApiRequest;
 use App\Models\Service;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\QueryBuilder;
 
 /**
@@ -68,11 +70,28 @@ class ServiceApiController extends AppbaseController implements HasMiddleware
      */
     public function store(CreateServiceApiRequest $request): JsonResponse
     {
-        $input = $request->all();
+        $service = DB::transaction(function () use ($request) {
 
-        $services = Service::create($input);
+            $serviceCreated = Service::create($request->except(['service_database', 'service_web']));
 
-        return $this->sendResponse($services->toArray(), 'Service creado con éxito.');
+            if ($request->filled('service_database')) {
+                $dbInput = $request->service_database;
+
+                if (isset($dbInput['password'])) {
+                    $dbInput['password'] = Crypt::encryptString($dbInput['password']);
+                }
+
+                $serviceCreated->detalleDataBase()->create($dbInput);
+            }
+
+            if ($request->filled('service_web')) {
+                $serviceCreated->detalleWeb()->create($request->service_web);
+            }
+
+            return $serviceCreated;
+        });
+
+        return $this->sendResponse($service->toArray(), 'Servicio creado y configurado con éxito.');
     }
 
     /**
@@ -81,6 +100,11 @@ class ServiceApiController extends AppbaseController implements HasMiddleware
      */
     public function show(Service $service)
     {
+        $service->load([
+            'detalleWeb.server',
+            'detalleDataBase'
+        ]);
+
         return $this->sendResponse($service->toArray(), 'Service recuperado con éxito.');
     }
 
@@ -88,13 +112,44 @@ class ServiceApiController extends AppbaseController implements HasMiddleware
     * Update the specified Service in storage.
     * PUT/PATCH /services/{id}
     */
+
     public function update(UpdateServiceApiRequest $request, $id): JsonResponse
     {
-        $service = Service::findOrFail($id);
-        $service->update($request->validated());
-        return $this->sendResponse($service, 'Service actualizado con éxito.');
-    }
+        $service = DB::transaction(function () use ($request, $id) {
 
+            $serviceTarget = Service::findOrFail($id);
+
+            $serviceTarget->update($request->except(['service_database', 'service_web']));
+
+            if ($serviceTarget->type === 'database' && $request->filled('service_database')) {
+                $dbInput = $request->service_database;
+
+                if (!empty($dbInput['password'])) {
+                    $dbInput['password'] = Crypt::encryptString($dbInput['password']);
+                } else {
+                    unset($dbInput['password']);
+                }
+
+                $serviceTarget->detalleWeb()->delete();
+
+                $serviceTarget->detalleDataBase()->updateOrCreate(
+                    ['service_id' => $serviceTarget->id],
+                    $dbInput
+                );
+            }
+            if ($serviceTarget->type === 'web' && $request->filled('service_web')) {
+                $serviceTarget->detalleDataBase()->delete();
+                $serviceTarget->detalleWeb()->updateOrCreate(
+                    ['service_id' => $serviceTarget->id],
+                    $request->service_web
+                );
+            }
+
+            return $serviceTarget;
+        });
+
+        return $this->sendResponse($service->toArray(), 'Servicio actualizado con éxito.');
+    }
     /**
     * Remove the specified Service from storage.
     * DELETE /services/{id}

@@ -4,11 +4,12 @@ namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $name
@@ -47,15 +48,14 @@ class Service extends Model
     protected $table = 'services';
 
 
-    protected $fillable =
-        [
-    'name',
-    'description',
-    'type',
-    'is_active',
-    'testMethod',
-    'httpMethod'
-];
+    protected $fillable = [
+        'name',
+        'description',
+        'type',
+        'is_active',
+        'testMethod',
+        'httpMethod'
+    ];
 
 
     /**
@@ -63,8 +63,7 @@ class Service extends Model
      *
      * @var array
      */
-    protected $casts =
-        [
+    protected $casts = [
         'id' => 'integer',
         'name' => 'string',
         'description' => 'string',
@@ -78,21 +77,21 @@ class Service extends Model
     ];
 
 
-
     /**
      * Validation rules
      *
      * @var array
      */
-    public static $rules =
-    [
-    'name' => 'required|string|max:255',
-    'description' => 'nullable|string',
-    'type' => 'required|string',
-    'is_active' => 'required|integer',
-    'testMethod' => 'nullable|string|max:45',
-    'httpMethod' => 'nullable|string|max:45',
-];
+    public static $rules = [
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'type' => 'required|string',
+        'is_active' => 'required|integer',
+        'testMethod' => 'nullable|string|max:45',
+        'httpMethod' => 'nullable|string|max:45',
+        'service_web' => 'nullable',
+        'service_database' => 'nullable',
+    ];
 
 
     /**
@@ -100,7 +99,7 @@ class Service extends Model
      *
      * @var array
      */
-    public static $messages =[
+    public static $messages = [
 
     ];
 
@@ -110,6 +109,15 @@ class Service extends Model
      *
      * @var array
      */
-    
+
+    public function detalleWeb(): HasOne
+    {
+        return $this->hasOne(ServiceWeb::class, 'service_id');
+    }
+
+    public function detalleDataBase(): HasOne
+    {
+        return $this->hasOne(ServiceDataBase::class, 'service_id');
+    }
 
 }
