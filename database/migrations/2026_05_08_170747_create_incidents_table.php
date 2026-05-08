@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamp('opened_at');
             $table->timestamp('resolved_at')->nullable();
             $table->unsignedBigInteger('service_id')->index('fk_incidents_services1_idx');
-            $table->unsignedBigInteger('ping_id')->index('fk_incidents_service_logs1_idx');
+            $table->unsignedBigInteger('ping_id')->nullable()->index('fk_incidents_service_logs1_idx');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -4,11 +4,12 @@ namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $description
@@ -49,15 +50,14 @@ class Incident extends Model
     protected $table = 'incidents';
 
 
-    protected $fillable =
-        [
-    'description',
-    'status',
-    'opened_at',
-    'resolved_at',
-    'service_id',
-    'ping_id'
-];
+    protected $fillable = [
+        'description',
+        'status',
+        'opened_at',
+        'resolved_at',
+        'service_id',
+        'ping_id'
+    ];
 
 
     /**
@@ -65,8 +65,7 @@ class Incident extends Model
      *
      * @var array
      */
-    protected $casts =
-        [
+    protected $casts = [
         'id' => 'integer',
         'description' => 'string',
         'status' => 'string',
@@ -80,21 +79,19 @@ class Incident extends Model
     ];
 
 
-
     /**
      * Validation rules
      *
      * @var array
      */
-    public static $rules =
-    [
-    'description' => 'required|string',
-    'status' => 'required|string',
-    'opened_at' => 'required|date',
-    'resolved_at' => 'nullable|date',
-    'service_id' => 'required|integer',
-    'ping_id' => 'required|integer',
-];
+    public static $rules = [
+        'description' => 'required|string',
+        'status' => 'required|string',
+        'opened_at' => 'required|date',
+        'resolved_at' => 'nullable|date',
+        'service_id' => 'required|integer',
+        'ping_id' => 'required|integer',
+    ];
 
 
     /**
@@ -102,7 +99,7 @@ class Incident extends Model
      *
      * @var array
      */
-    public static $messages =[
+    public static $messages = [
 
     ];
 
@@ -112,14 +109,14 @@ class Incident extends Model
      *
      * @var array
      */
-    public function serviceLog()
+    public function log(): BelongsTo
     {
-    return $this->belongsTo(ServiceLog::class,'ping_id','id');
+        return $this->belongsTo(ServiceLog::class, 'ping_id', 'id');
     }
 
-    public function service()
+    public function service(): BelongsTo
     {
-    return $this->belongsTo(Service::class,'service_id','id');
+        return $this->belongsTo(Service::class, 'service_id', 'id');
     }
 
 }
