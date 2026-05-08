@@ -25,6 +25,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('services', App\Http\Controllers\Api\ServiceApiController::class)
         ->parameters(['services' => 'service']);
 
+    Route::apiResource('incidents', App\Http\Controllers\Api\IncidentApiController::class)
+        ->parameters(['incidents' => 'incident']);
+
 });
 
 require __DIR__.'/auth.php';

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -117,6 +118,16 @@ class Incident extends Model
     public function service(): BelongsTo
     {
         return $this->belongsTo(Service::class, 'service_id', 'id');
+    }
+
+    public function scopeSoloActivos(Builder $query)
+    {
+        return $query->where('status', 'active');
+    }
+
+    public function scopeSoloFinalizados(Builder $query)
+    {
+        return $query->where('status', 'resolved');
     }
 
 }

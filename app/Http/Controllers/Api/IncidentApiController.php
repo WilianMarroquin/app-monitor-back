@@ -10,6 +10,7 @@ use App\Http\Requests\Api\UpdateIncidentApiRequest;
 use App\Models\Incident;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 /**
@@ -40,21 +41,23 @@ class IncidentApiController extends AppbaseController implements HasMiddleware
     {
         $incidents = QueryBuilder::for(Incident::class)
             ->allowedFilters([
-    'description',
-    'status',
-    'opened_at',
-    'resolved_at',
-    'service_id',
-    'ping_id'
-])
+                'description',
+                'status',
+                'opened_at',
+                'resolved_at',
+                'service_id',
+                'ping_id',
+                AllowedFilter::scope('soloActivos','soloActivos'),
+                AllowedFilter::scope('soloFinalizados','soloFinalizados'),
+            ])
             ->allowedSorts([
-    'description',
-    'status',
-    'opened_at',
-    'resolved_at',
-    'service_id',
-    'ping_id'
-])
+                'description',
+                'status',
+                'opened_at',
+                'resolved_at',
+                'service_id',
+                'ping_id'
+            ])
             ->defaultSort('-id') // Ordenar por defecto por fecha descendente
             ->Paginate(request('page.size') ?? 10);
 
@@ -85,9 +88,9 @@ class IncidentApiController extends AppbaseController implements HasMiddleware
     }
 
     /**
-    * Update the specified Incident in storage.
-    * PUT/PATCH /incidents/{id}
-    */
+     * Update the specified Incident in storage.
+     * PUT/PATCH /incidents/{id}
+     */
     public function update(UpdateIncidentApiRequest $request, $id): JsonResponse
     {
         $incident = Incident::findOrFail($id);
@@ -96,9 +99,9 @@ class IncidentApiController extends AppbaseController implements HasMiddleware
     }
 
     /**
-    * Remove the specified Incident from storage.
-    * DELETE /incidents/{id}
-    */
+     * Remove the specified Incident from storage.
+     * DELETE /incidents/{id}
+     */
     public function destroy(Incident $incident): JsonResponse
     {
         $incident->delete();
