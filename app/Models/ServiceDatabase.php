@@ -25,11 +25,13 @@ class ServiceDatabase extends Model
         'password'
     ];
 
-    // === 3. PROTECCIÓN SENIOR (Data Serialization) ===
-    // Oculta la contraseña para que nunca viaje al frontend en el JSON
-    protected $hidden = [
-        'password',
-    ];
+    protected $primaryKey = 'service_id';
+
+    public $incrementing = false;
+
+//    protected $hidden = [
+//        'password',
+//    ];
 
     protected $casts = [
         'service_id' => 'integer',

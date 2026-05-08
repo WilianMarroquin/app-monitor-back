@@ -4,11 +4,12 @@ namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * 
+ *
  *
  * @property int $service_id
  * @property string $url
@@ -40,13 +41,15 @@ class ServiceWeb extends Model
 
     protected $table = 'service_webs';
 
+    protected $primaryKey = 'service_id';
 
-    protected $fillable =
-        [
-    'service_id',
-    'url',
-    'server_id'
-];
+    public $incrementing = false;
+
+    protected $fillable = [
+        'service_id',
+        'url',
+        'server_id'
+    ];
 
 
     /**
@@ -54,8 +57,7 @@ class ServiceWeb extends Model
      *
      * @var array
      */
-    protected $casts =
-        [
+    protected $casts = [
         'service_id' => 'integer',
         'url' => 'string',
         'server_id' => 'integer',
@@ -65,18 +67,16 @@ class ServiceWeb extends Model
     ];
 
 
-
     /**
      * Validation rules
      *
      * @var array
      */
-    public static $rules =
-    [
-    'service_id' => 'required|integer|unique:service_webs,service_id',
-    'url' => 'required|string|max:350',
-    'server_id' => 'required|integer',
-];
+    public static $rules = [
+        'service_id' => 'required|integer|unique:service_webs,service_id',
+        'url' => 'required|string|max:350',
+        'server_id' => 'required|integer',
+    ];
 
 
     /**
@@ -84,7 +84,7 @@ class ServiceWeb extends Model
      *
      * @var array
      */
-    public static $messages =[
+    public static $messages = [
 
     ];
 
@@ -94,14 +94,14 @@ class ServiceWeb extends Model
      *
      * @var array
      */
-    public function server()
+    public function server(): BelongsTo
     {
-    return $this->belongsTo(Server::class,'server_id','id');
+        return $this->belongsTo(Server::class, 'server_id', 'id');
     }
 
-    public function service()
+    public function service(): BelongsTo
     {
-    return $this->belongsTo(Service::class,'service_id','id');
+        return $this->belongsTo(Service::class, 'service_id', 'id');
     }
 
 }
