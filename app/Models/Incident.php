@@ -3,9 +3,9 @@
 namespace App\Models;
 
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -18,12 +18,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property int $opened_at
  * @property int|null $resolved_at
  * @property int $service_id
- * @property int $ping_id
+ * @property int|null $ping_id
  * @property int|null $created_at
  * @property int|null $updated_at
  * @property int|null $deleted_at
  * @property-read \App\Models\Service $service
- * @property-read \App\Models\ServiceLog $serviceLog
+ * @property-read \App\Models\ServiceLog|null $serviceLog
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Incident newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Incident newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Incident onlyTrashed()
@@ -91,7 +91,7 @@ class Incident extends Model
         'opened_at' => 'required|date',
         'resolved_at' => 'nullable|date',
         'service_id' => 'required|integer',
-        'ping_id' => 'required|integer',
+        'ping_id' => 'nullable|integer',
     ];
 
 
@@ -120,14 +120,10 @@ class Incident extends Model
         return $this->belongsTo(Service::class, 'service_id', 'id');
     }
 
-    public function scopeSoloActivos(Builder $query)
+    public function comentarios(): HasMany
     {
-        return $query->where('status', 'active');
-    }
+        return $this->hasMany(IncidentComment::class, 'incident_id', 'id');
 
-    public function scopeSoloFinalizados(Builder $query)
-    {
-        return $query->where('status', 'resolved');
     }
 
 }

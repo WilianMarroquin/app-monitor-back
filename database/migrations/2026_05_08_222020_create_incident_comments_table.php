@@ -21,6 +21,10 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
 
+            $table->foreignId('user_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
             // Crea automáticamente created_at y updated_at
             $table->timestamps();
 
