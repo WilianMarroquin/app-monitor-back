@@ -112,6 +112,26 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'legacy_db' => [
+            'driver' => 'mysql', // o el motor que use la BD antigua
+            'host' => env('LEGACY_DB_HOST', '127.0.0.1'),
+            'port' => env('LEGACY_DB_PORT', '3306'),
+            'database' => env('LEGACY_DB_DATABASE', 'forge'),
+            'username' => env('LEGACY_DB_USERNAME', 'forge'),
+            'password' => env('LEGACY_DB_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                // 1. Apagamos la verificación estricta del certificado
+                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
+                // 2. MAGIA: Al definir un Cipher, FORZAMOS a PDO a usar SSL sí o sí
+                PDO::MYSQL_ATTR_SSL_CIPHER => 'ALL',
+            ]) : [],
+        ],
+
     ],
 
     /*

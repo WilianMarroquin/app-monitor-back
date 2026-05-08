@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('service_logs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->enum('status', ['up', 'down']);
-            $table->float('response_time');
+            $table->float('response_time')->nullable();
             $table->timestamp('checked_at');
             $table->unsignedBigInteger('service_id')->index('fk_service_logs_services1_idx');
         });
