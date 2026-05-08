@@ -10,6 +10,7 @@ class MenuOpcionesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     * Para ejct
      */
     public function run(): void
     {
@@ -149,6 +150,40 @@ class MenuOpcionesTableSeeder extends Seeder
             "action" => "Listar Areas",
             "subject" => "Area",
             "parent_id" => $catalogos->id
+        ]);
+
+        MenuOpcion::create([
+            "id" => 10,
+            "titulo" => "Contactos",
+            "icono" => "ri-settings-3-fill",
+            "ruta" => 'notification-contacts',
+            "orden" => 1,
+            "action" => "Listar Notification Contactes",
+            "subject" => "NotificationContact",
+            "parent_id" => $catalogos->id
+        ]);
+
+        MenuOpcion::create([
+            "id" => 10,
+            "titulo" => "Servidores",
+            "icono" => "ri-settings-3-fill",
+            "ruta" => 'servers',
+            "orden" => 1,
+            "action" => "Listar Serveres",
+            "subject" => "Server",
+            "parent_id" => $catalogos->id
+        ]);
+
+        MenuOpcion::create([
+            "id" => 2,
+            "titulo" => null,
+            "icono" => null,
+            "ruta" => null,
+            "orden" => 1,
+            "titulo_seccion" => "Core",
+            "action" => "Ver Modulo Core",
+            "subject" => "Core",
+            "parent_id" => null
         ]);
 
         MenuOpcion::create([

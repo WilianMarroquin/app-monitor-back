@@ -1,12 +1,12 @@
 <?php
 
-namespace Database\Seeders\permisos;
+namespace Database\Seeders;
 
-use App\Models\Permission;
 use App\Models\Rol;
 use Illuminate\Database\Seeder;
+use App\Models\Permission;
 
-class NotificationContactPermisosTableSeeder extends Seeder
+class ServerPermisosTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,17 +17,17 @@ class NotificationContactPermisosTableSeeder extends Seeder
     {
 
         $permisos = [
-            'Listar Notification Contactes',
-            'Ver Notification Contactes',
-            'Crear Notification Contactes',
-            'Editar Notification Contactes',
-            'Eliminar Notification Contactes',
+            'Listar Serveres',
+            'Ver Serveres',
+            'Crear Serveres',
+            'Editar Serveres',
+            'Eliminar Serveres',
         ];
 
         foreach ($permisos as $permiso) {
             Permission::create([
                 'name' => $permiso,
-                'subject' => 'NotificationContact',
+                'subject' => 'Server',
                 'guard_name' => 'web',
             ]);
         }
