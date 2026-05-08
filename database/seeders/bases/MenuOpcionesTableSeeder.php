@@ -182,10 +182,20 @@ class MenuOpcionesTableSeeder extends Seeder
         ]);
 
         MenuOpcion::create([
+            "titulo" => "Tickets",
+            "icono" => "ri-ticket-2-fill",
+            "ruta" => 'incidents',
+            "orden" => 17,
+            "action" => "Listar Incidentes",
+            "subject" => "Incident",
+            "parent_id" => null
+        ]);
+
+        MenuOpcion::create([
             "titulo" => null,
             "icono" => null,
             "ruta" => null,
-            "orden" => 17,
+            "orden" => 18,
             "titulo_seccion" => "Modulo Programación",
             "action" => "Ver Modulo Desarrollo",
             "subject" => "Desarrollo",
@@ -196,7 +206,7 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => "Developers",
             "icono" => "ri-tools-fill",
             "ruta" => "second-page",
-            "orden" => 18,
+            "orden" => 19,
             "action" => "Ver Modulo Desarrollo",
             "subject" => "Desarrollo",
             "parent_id" => null
@@ -206,7 +216,7 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => "Configuraciones",
             "icono" => "ri-settings-5-fill",
             "ruta" => "dev-configuraciones",
-            "orden" => 19,
+            "orden" => 20,
             "action" => "Listar Configuraciones",
             "subject" => "Configuracion",
             "parent_id" => $developers->id
@@ -216,7 +226,7 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => "Componentes",
             "icono" => "ri-code-box-line",
             "ruta" => "dev-componentes",
-            "orden" => 20,
+            "orden" => 21,
             "action" => "Listar Componentes",
             "subject" => "Desarrollo",
             "parent_id" => $developers->id

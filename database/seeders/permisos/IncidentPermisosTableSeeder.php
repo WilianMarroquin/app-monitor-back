@@ -17,6 +17,7 @@ class IncidentPermisosTableSeeder extends Seeder
     {
 
         $permisos = [
+            'Listar Incidentes',
             'Ver Incidentes',
             'Crear Incidentes',
             'Editar Incidentes',
