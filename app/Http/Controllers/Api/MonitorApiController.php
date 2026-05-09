@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Incident;
 use App\Models\Service;
 use App\Models\ServiceLog;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -89,7 +90,7 @@ class MonitorApiController extends Controller
                     'ping_id'     => $ping->id,
                     'status'      => 'open',
                     'description' => $validated['observations'],
-                    'opened_at'   => $pingDate->timestamp,
+                    'opened_at'   => $pingDate,
                 ]);
             }
 
@@ -105,12 +106,13 @@ class MonitorApiController extends Controller
             if($activeIncident) {
                 $activeIncident->update([
                     'status'      => 'resolved',
-                    'resolved_at' => $pingDate->timestamp,
+                    'resolved_at' => $pingDate,
                 ]);
 
                 $activeIncident->comentarios()->create([
                     'description' => "RESOLUCIÓN AUTOMÁTICA. Tiempo de respuesta: {$validated['responseTimeMs']}ms.",
-                    'created_at'  => $pingDate->timestamp
+                    'created_at'  => $pingDate,
+                    'user_id'  => User::find(3)->id,
                 ]);
             }
         }
