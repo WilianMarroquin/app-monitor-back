@@ -22,8 +22,13 @@ return new class extends Migration
             $table->string('port', 10)->nullable();
             $table->string('tiempo_espera', 10)->nullable();
             $table->enum('entorno', ['Desarrollo', 'Produccion'])->nullable();
+            $table->unsignedBigInteger('server_id')
+                ->index('fk_service_webs_servers1_idx')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign(['server_id'], 'fk_service_webs_servers1')->references(['id'])->on('servers')->onUpdate('no action')->onDelete('no action');
+
         });
     }
 
@@ -32,6 +37,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('service_webs', function (Blueprint $table) {
+            $table->dropForeign('fk_service_webs_servers1');
+        });
         Schema::dropIfExists('services');
     }
 };

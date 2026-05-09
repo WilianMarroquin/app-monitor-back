@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- *
+ * 
  *
  * @property int $id
  * @property string $name
@@ -43,6 +43,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property-read \App\Models\ServiceDatabase|null $detalleDataBase
  * @property-read \App\Models\ServiceWeb|null $detalleWeb
  * @property-read \App\Models\Server|null $server
+ * @property int|null $port
+ * @property int|null $tiempo_espera
+ * @property string|null $entorno
+ * @property int|null $server_id
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Area> $areas
+ * @property-read int|null $areas_count
+ * @property-read array $contactos
+ * @method static Builder<static>|Service soloActivos()
+ * @method static Builder<static>|Service whereEntorno($value)
+ * @method static Builder<static>|Service wherePort($value)
+ * @method static Builder<static>|Service whereServerId($value)
+ * @method static Builder<static>|Service whereTiempoEspera($value)
  * @mixin \Eloquent
  */
 class Service extends Model
@@ -64,6 +76,7 @@ class Service extends Model
         'port',
         'tiempo_espera',
         'entorno',
+        'server_id',
     ];
 
 
@@ -82,6 +95,7 @@ class Service extends Model
         'httpMethod' => 'string',
         'port' => 'integer',
         'tiempo_espera' => 'integer',
+        'server_id' => 'integer',
         'created_at' => 'timestamp',
         'updated_at' => 'timestamp',
         'deleted_at' => 'timestamp',
@@ -171,5 +185,4 @@ class Service extends Model
 
         return $contactos;
     }
-
 }

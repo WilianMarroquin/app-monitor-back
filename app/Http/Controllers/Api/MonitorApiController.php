@@ -14,14 +14,13 @@ class MonitorApiController extends Controller
 {
     public function getServicesToMonitor(Request $request)
     {
-        $services = Service::with(['server.area'])
-            ->soloActivos()
+        $services = Service::soloActivos()
             ->get()
             ->map(function (Service $service) {
                 return [
                     'id'            => $service->id,
                     'name'          => $service->name,
-                    'type'          => $service->type ?? 'HTTP',
+                    'type'          => $service->httpMethod ?? 'HTTP',
                     'testMethod'    => $service->testMethod ?? 'HTTP', // Si en BD es test_method, cámbialo a $service->test_method
                     'checkInterval' => $service->tiempo_espera ?? 60,  // Igual aquí, si es check_interval...
                     'httpUrl'       => $service?->detalleWeb?->url ?? null,
@@ -30,17 +29,18 @@ class MonitorApiController extends Controller
 
                     // Credenciales DB (si aplica)
                     'dbHost'        => $service->detalleDataBase?->host_ip,
-                    'dbPort'        => $service->detalleDataBase?->port,
+                    'dbPort'        => $service->port,
                     'dbName'       =>  $service->detalleDataBase?->name,
                     'dbUsername'    => $service->detalleDataBase?->username,
                     'dbPassword'    => $service->detalleDataBase?->password,
 
                     // Relación anidada: Server -> Area
-                    'server'        => $service?->detalleWeb?->server ? [
-                        'id'   => $service->detalleWeb->server->id,
-                        'name' => $service->detalleWeb->server->name,
-                        'ip'   => $service->detalleWeb->server->internal_ip,
+                    'server'        => $service?->server ? [
+                        'id'   => $service->server->id,
+                        'name' => $service->server->name,
+                        'ip'   => $service->server->internal_ip,
                         'area'   => [
+                            'id' => $service->entorno == 'Produccion' ? 1 : 2,
                             'name' => $service->entorno
                         ]
                     ] : null,

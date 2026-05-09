@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute; // <-- 1. Importamos Attribute
 use Illuminate\Support\Facades\Crypt;            // <-- 2. Importamos Crypt
 
 /**
- *
+ * 
  *
  * @property int $service_id
  * @property string $db_type
@@ -37,6 +37,8 @@ use Illuminate\Support\Facades\Crypt;            // <-- 2. Importamos Crypt
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase whereUsername($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase withoutTrashed()
+ * @property string $name
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase whereName($value)
  * @mixin \Eloquent
  */
 class ServiceDatabase extends Model
