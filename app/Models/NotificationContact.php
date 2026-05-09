@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- *
+ * 
  *
  * @property int $id
  * @property string $nombres
@@ -30,6 +30,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NotificationContact whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NotificationContact withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NotificationContact withoutTrashed()
+ * @property-read string $nombre_completo
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|NotificationContact buscarPorNombreCompleto($nombreCompleto)
  * @mixin \Eloquent
  */
 class NotificationContact extends Model

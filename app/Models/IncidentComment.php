@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- *
+ * 
  *
  * @property int $id
  * @property string $description
@@ -30,6 +30,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|IncidentComment whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|IncidentComment withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|IncidentComment withoutTrashed()
+ * @property int $user_id
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|IncidentComment whereUserId($value)
  * @mixin \Eloquent
  */
 class IncidentComment extends Model

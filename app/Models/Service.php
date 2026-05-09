@@ -4,6 +4,8 @@ namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -37,6 +39,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Service whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Service withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Service withoutTrashed()
+ * @property-read \App\Models\ServiceDatabase|null $detalleDataBase
+ * @property-read \App\Models\ServiceWeb|null $detalleWeb
+ * @property-read \App\Models\Server|null $server
  * @mixin \Eloquent
  */
 class Service extends Model
@@ -118,6 +123,20 @@ class Service extends Model
     public function detalleDataBase(): HasOne
     {
         return $this->hasOne(ServiceDataBase::class, 'service_id');
+    }
+
+    public function server(): BelongsTo
+    {
+        return $this->belongsTo(Server::class, 'server_id');
+    }
+
+    public function areas(): BelongsToMany
+    {
+        return $this->belongsToMany(Area::class,
+            'area_service',
+            'service_id',
+            'area_id'
+        );
     }
 
 }

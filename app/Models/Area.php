@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- *
+ * 
  *
  * @property int $id
  * @property string $name
@@ -29,6 +29,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Area whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Area withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Area withoutTrashed()
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\NotificationContact> $contactosAsignados
+ * @property-read int|null $contactos_asignados_count
  * @mixin \Eloquent
  */
 class Area extends Model

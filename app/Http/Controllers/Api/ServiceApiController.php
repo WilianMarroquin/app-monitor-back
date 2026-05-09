@@ -42,21 +42,21 @@ class ServiceApiController extends AppbaseController implements HasMiddleware
     {
         $services = QueryBuilder::for(Service::class)
             ->allowedFilters([
-    'name',
-    'description',
-    'type',
-    'is_active',
-    'testMethod',
-    'httpMethod'
-])
+                'name',
+                'description',
+                'type',
+                'is_active',
+                'testMethod',
+                'httpMethod'
+            ])
             ->allowedSorts([
-    'name',
-    'description',
-    'type',
-    'is_active',
-    'testMethod',
-    'httpMethod'
-])
+                'name',
+                'description',
+                'type',
+                'is_active',
+                'testMethod',
+                'httpMethod'
+            ])
             ->defaultSort('-id') // Ordenar por defecto por fecha descendente
             ->Paginate(request('page.size') ?? 10);
 
@@ -88,6 +88,10 @@ class ServiceApiController extends AppbaseController implements HasMiddleware
                 $serviceCreated->detalleWeb()->create($request->service_web);
             }
 
+            if($request->filled('area_ids')) {
+                $serviceCreated->areas()->sync($request->area_ids);
+            }
+
             return $serviceCreated;
         });
 
@@ -102,16 +106,17 @@ class ServiceApiController extends AppbaseController implements HasMiddleware
     {
         $service->load([
             'detalleWeb.server',
-            'detalleDataBase'
+            'detalleDataBase',
+            'areas',
         ]);
 
         return $this->sendResponse($service->toArray(), 'Service recuperado con éxito.');
     }
 
     /**
-    * Update the specified Service in storage.
-    * PUT/PATCH /services/{id}
-    */
+     * Update the specified Service in storage.
+     * PUT/PATCH /services/{id}
+     */
 
     public function update(UpdateServiceApiRequest $request, $id): JsonResponse
     {
@@ -145,15 +150,18 @@ class ServiceApiController extends AppbaseController implements HasMiddleware
                 );
             }
 
+            $serviceTarget->areas()->sync($request->area_ids ?? []);
+
             return $serviceTarget;
         });
 
         return $this->sendResponse($service->toArray(), 'Servicio actualizado con éxito.');
     }
+
     /**
-    * Remove the specified Service from storage.
-    * DELETE /services/{id}
-    */
+     * Remove the specified Service from storage.
+     * DELETE /services/{id}
+     */
     public function destroy(Service $service): JsonResponse
     {
         $service->delete();

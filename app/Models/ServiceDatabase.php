@@ -9,6 +9,36 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute; // <-- 1. Importamos Attribute
 use Illuminate\Support\Facades\Crypt;            // <-- 2. Importamos Crypt
 
+/**
+ * 
+ *
+ * @property int $service_id
+ * @property string $db_type
+ * @property string $host_ip
+ * @property string $port
+ * @property string $username
+ * @property string $password
+ * @property int|null $created_at
+ * @property int|null $updated_at
+ * @property int|null $deleted_at
+ * @property-read \App\Models\Service $service
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase whereDbType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase whereHostIp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase wherePort($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase whereServiceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase whereUsername($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase withoutTrashed()
+ * @mixin \Eloquent
+ */
 class ServiceDatabase extends Model
 {
     use SoftDeletes;

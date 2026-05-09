@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $name
@@ -45,14 +45,13 @@ class Server extends Model
     protected $table = 'servers';
 
 
-    protected $fillable =
-        [
-    'name',
-    'description',
-    'internal_ip',
-    'external_ip',
-    'entorno'
-];
+    protected $fillable = [
+        'name',
+        'description',
+        'internal_ip',
+        'external_ip',
+        'entorno'
+    ];
 
 
     /**
@@ -60,8 +59,7 @@ class Server extends Model
      *
      * @var array
      */
-    protected $casts =
-        [
+    protected $casts = [
         'id' => 'integer',
         'name' => 'string',
         'description' => 'string',
@@ -74,20 +72,18 @@ class Server extends Model
     ];
 
 
-
     /**
      * Validation rules
      *
      * @var array
      */
-    public static $rules =
-    [
-    'name' => 'required|string|max:150',
-    'description' => 'nullable|string',
-    'internal_ip' => 'nullable|string|max:15',
-    'external_ip' => 'nullable|string|max:15',
-    'entorno' => 'nullable|string',
-];
+    public static $rules = [
+        'name' => 'required|string|max:150',
+        'description' => 'nullable|string',
+        'internal_ip' => 'nullable|string|max:15',
+        'external_ip' => 'nullable|string|max:15',
+        'entorno' => 'nullable|string',
+    ];
 
 
     /**
@@ -95,7 +91,7 @@ class Server extends Model
      *
      * @var array
      */
-    public static $messages =[
+    public static $messages = [
 
     ];
 
@@ -105,6 +101,6 @@ class Server extends Model
      *
      * @var array
      */
-    
+
 
 }

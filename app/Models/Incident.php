@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- *
+ * 
  *
  * @property int $id
  * @property string $description
@@ -40,6 +40,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Incident whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Incident withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Incident withoutTrashed()
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\IncidentComment> $comentarios
+ * @property-read int|null $comentarios_count
+ * @property-read \App\Models\ServiceLog|null $log
  * @mixin \Eloquent
  */
 class Incident extends Model
