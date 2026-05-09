@@ -26,7 +26,7 @@ class MonitorApiController extends Controller
                     'checkInterval' => $service->checkInterval ?? 60,  // Igual aquí, si es check_interval...
                     'httpUrl'       => $service?->detalleWeb?->url ?? null,
                     'httpMethod'    => $service->http_method ?? $service->httpMethod ?? 'GET',
-                    'port'          => $service->port,
+                    'port'          => $service->detalleDataBase?->port ?? null,
 
                     // Credenciales DB (si aplica)
                     'dbHost'        => $service->detalleDataBase?->host_ip,
@@ -46,6 +46,7 @@ class MonitorApiController extends Controller
                         ] : null
                     ] : null,
 
+                    'contactos' => $service->contactos,
                     // Formato ISO 8601 para la fecha (Ej: "2026-04-23T05:23:56.601Z")
                     // Si tienes un campo last_test_at, úsalo. Si no, usamos updated_at o null.
                     'lastTestAt'    => $service->updated_at ? $service->updated_at : null,

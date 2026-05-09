@@ -145,4 +145,23 @@ class Service extends Model
         return $query->where('is_active', true);
     }
 
+    public function getContactosAttribute(): array
+    {
+        $contactos = [];
+        /**
+         * @var Service $this
+         * @var Area $area
+         */
+        foreach ($this->areas as $area) {
+            foreach ($area->contactosAsignados as $contacto) {
+                $contactos[] = [
+                    'name' => $contacto->nombre_completo,
+                    'telefono' => $contacto->telefono,
+                ];
+            }
+        }
+
+        return $contactos;
+    }
+
 }
