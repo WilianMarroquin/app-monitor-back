@@ -50,6 +50,7 @@ class ServiceApiController extends AppbaseController implements HasMiddleware
                 'httpMethod'
             ])
             ->allowedSorts([
+                'id',
                 'name',
                 'description',
                 'type',

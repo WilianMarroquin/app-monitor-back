@@ -23,15 +23,14 @@ class MonitorApiController extends Controller
                     'name'          => $service->name,
                     'type'          => $service->type ?? 'HTTP',
                     'testMethod'    => $service->testMethod ?? 'HTTP', // Si en BD es test_method, cámbialo a $service->test_method
-                    'checkInterval' => $service->checkInterval ?? 60,  // Igual aquí, si es check_interval...
+                    'checkInterval' => $service->tiempo_espera ?? 60,  // Igual aquí, si es check_interval...
                     'httpUrl'       => $service?->detalleWeb?->url ?? null,
-                    'httpMethod'    => $service->http_method ?? $service->httpMethod ?? 'GET',
-                    'port'          => $service->detalleDataBase?->port ?? null,
+                    'httpMethod'    => $service->httpMethod ?? 'GET',
+                    'port'          => $service->port,
 
                     // Credenciales DB (si aplica)
                     'dbHost'        => $service->detalleDataBase?->host_ip,
                     'dbPort'        => $service->detalleDataBase?->port,
-                    'dbName'        => $service->detalleDataBase?->db_name, //Todo: No estoy mandando el nombre de la base de datos
                     'dbUsername'    => $service->detalleDataBase?->username,
                     'dbPassword'    => $service->detalleDataBase?->password,
 
@@ -39,17 +38,17 @@ class MonitorApiController extends Controller
                     'server'        => $service?->detalleWeb?->server ? [
                         'id'   => $service->detalleWeb->server->id,
                         'name' => $service->detalleWeb->server->name,
-                        'ip'   => $service->detalleWeb->server->ip,
-                        'area' => $service->detalleWeb->server->area ? [
-                            'id'   => $service->detalleWeb->server->area->id,
-                            'name' => $service->detalleWeb->server->area->name,
-                        ] : null
+                        'ip'   => $service->detalleWeb->server->internal_ip,
+                        'area'   => [
+                            'name' => $service->entorno
+                        ]
                     ] : null,
-
                     'contactos' => $service->contactos,
-                    // Formato ISO 8601 para la fecha (Ej: "2026-04-23T05:23:56.601Z")
-                    // Si tienes un campo last_test_at, úsalo. Si no, usamos updated_at o null.
-                    'lastTestAt'    => $service->updated_at ? $service->updated_at : null,
+                    'lastTestAt' => $service->updated_at
+                        ? (is_numeric($service->updated_at)
+                            ? Carbon::createFromTimestamp($service->updated_at)->utc()->toISOString()
+                            : Carbon::parse($service->updated_at)->utc()->toISOString())
+                        : null,
                 ];
             });
 

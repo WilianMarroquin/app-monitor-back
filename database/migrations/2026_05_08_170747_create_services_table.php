@@ -19,6 +19,9 @@ return new class extends Migration
             $table->tinyInteger('is_active');
             $table->string('testMethod', 45)->nullable();
             $table->string('httpMethod', 45)->nullable();
+            $table->string('port', 10)->nullable();
+            $table->string('tiempo_espera', 10)->nullable();
+            $table->enum('entorno', ['Desarrollo', 'Produccion'])->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

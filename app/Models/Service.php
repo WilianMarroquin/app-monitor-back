@@ -60,7 +60,10 @@ class Service extends Model
         'type',
         'is_active',
         'testMethod',
-        'httpMethod'
+        'httpMethod',
+        'port',
+        'tiempo_espera',
+        'entorno',
     ];
 
 
@@ -97,6 +100,9 @@ class Service extends Model
         'httpMethod' => 'nullable|string|max:45',
         'service_web' => 'nullable',
         'service_database' => 'nullable',
+        'port' => 'nullable|string|max:10',
+        'tiempo_espera' => 'nullable|integer',
+        'entorno' => 'nullable|string|in:Desarrollo,Produccion',
     ];
 
 
