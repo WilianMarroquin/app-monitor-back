@@ -21,7 +21,7 @@ class ConfiguracionesTableSeeder extends Seeder
 
         Configuracion::firstOrCreate([
             'key' => 'nombre_aplicacion',
-            'value' => 'SYSBASE',
+            'value' => 'Monitor',
             'descripcion' => 'Nombre de la empresa'
         ]);
 

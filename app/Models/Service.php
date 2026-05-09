@@ -80,6 +80,8 @@ class Service extends Model
         'is_active' => 'boolean',
         'testMethod' => 'string',
         'httpMethod' => 'string',
+        'port' => 'integer',
+        'tiempo_espera' => 'integer',
         'created_at' => 'timestamp',
         'updated_at' => 'timestamp',
         'deleted_at' => 'timestamp',

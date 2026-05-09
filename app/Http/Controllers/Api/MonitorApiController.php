@@ -31,6 +31,7 @@ class MonitorApiController extends Controller
                     // Credenciales DB (si aplica)
                     'dbHost'        => $service->detalleDataBase?->host_ip,
                     'dbPort'        => $service->detalleDataBase?->port,
+                    'dbName'       =>  $service->detalleDataBase?->name,
                     'dbUsername'    => $service->detalleDataBase?->username,
                     'dbPassword'    => $service->detalleDataBase?->password,
 

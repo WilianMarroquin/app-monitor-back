@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute; // <-- 1. Importamos Attribute
 use Illuminate\Support\Facades\Crypt;            // <-- 2. Importamos Crypt
 
 /**
- * 
+ *
  *
  * @property int $service_id
  * @property string $db_type
@@ -50,7 +50,7 @@ class ServiceDatabase extends Model
         'service_id',
         'db_type',
         'host_ip',
-        'port',
+        'name',
         'username',
         'password'
     ];
