@@ -7,6 +7,7 @@ use App\Models\Incident;
 use App\Models\Service;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AnalyticsController extends Controller
 {
@@ -64,6 +65,17 @@ class AnalyticsController extends Controller
             ->selectRaw('AVG(TIMESTAMPDIFF(MINUTE, opened_at, resolved_at)) as mttr')
             ->value('mttr');
 
+        $trendData = (clone $baseQuery)
+            ->selectRaw('DATE(opened_at) as date, COUNT(*) as total_outages')
+            ->groupBy(DB::raw('DATE(opened_at)'))
+            ->orderBy('date', 'ASC')
+            ->get();
+
+        $alertFatigueCount = (clone $baseQuery)
+            ->whereNotNull('resolved_at')
+            ->whereRaw('TIMESTAMPDIFF(MINUTE, opened_at, resolved_at) < 3')
+            ->count();
+
         // ==========================================
         // 📊 MÉTRICA 2: TIEMPO TOTAL DE CAÍDA (Downtime)
         // ==========================================
@@ -117,14 +129,111 @@ class AnalyticsController extends Controller
                     'days'  => $startDate->diffInDays($endDate)
                 ],
                 'kpis' => [
-                    // Formateamos a 2 decimales para que se vea limpio en el frontend
                     'uptime_percentage' => round($uptimePercentage, 2),
                     'total_downtime_minutes' => round($totalDowntimeMinutes ?? 0, 2),
                     'mttr_minutes' => round($mttrMinutes ?? 0, 2),
                     'total_incidents' => (clone $baseQuery)->count(),
                     'open_incidents' => (clone $baseQuery)->where('status', 'open')->count(),
+                    // 👇 NUEVO KPI INYECTADO 👇
+                    'alert_fatigue' => $alertFatigueCount,
                 ],
-                'top_offenders' => $topOffenders
+                'top_offenders' => $topOffenders,
+                // 👇 NUEVA SERIE DE TIEMPO INYECTADA 👇
+                'trend_data' => $trendData
+            ]
+        ]);
+    }
+
+    public function getFailurePatterns(Request $request)
+    {
+        $startDate = $request->input('fecha_inicio')
+            ? Carbon::parse($request->fecha_inicio)->startOfDay()
+            : now()->subDays(30)->startOfDay();
+
+        $endDate = $request->input('fecha_fin')
+            ? Carbon::parse($request->fecha_fin)->endOfDay()
+            : now()->endOfDay();
+
+        $baseQuery = Incident::whereBetween('opened_at', [$startDate, $endDate]);
+
+        // ==========================================
+        // 🔍 PATRÓN 1: EL MAPA DE CALOR (Heatmap)
+        // ==========================================
+        // Extraemos el día de la semana (1=Domingo, 7=Sábado en MySQL) y la hora (0-23)
+        $heatmapRaw = (clone $baseQuery)
+            ->selectRaw('DAYOFWEEK(opened_at) as day_of_week, HOUR(opened_at) as hour_of_day, COUNT(*) as total')
+            ->groupBy(DB::raw('DAYOFWEEK(opened_at)'), DB::raw('HOUR(opened_at)'))
+            ->get();
+
+        // ==========================================
+        // 🔍 PATRÓN 2: DISTRIBUCIÓN POR TIPO DE SERVICIO (Web vs DB)
+        // ==========================================
+        // Hacemos un JOIN con la tabla services para saber si fallan más las APIS o las Bases de Datos
+        $typeDistribution = (clone $baseQuery)
+            ->join('services', 'incidents.service_id', '=', 'services.id')
+            ->selectRaw('services.type as service_type, COUNT(incidents.id) as total_outages')
+            ->groupBy('services.type')
+            ->get();
+
+        // ==========================================
+        // 🔍 PATRÓN 3: DURACIÓN DE LAS CAÍDAS (Rangos)
+        // ==========================================
+        // Clasificamos las caídas en "Micro-caídas", "Medianas" y "Críticas"
+        $durationDistribution = (clone $baseQuery)
+            ->whereNotNull('resolved_at')
+            ->selectRaw('
+                SUM(CASE WHEN TIMESTAMPDIFF(MINUTE, opened_at, resolved_at) < 5 THEN 1 ELSE 0 END) as micro_fails,
+                SUM(CASE WHEN TIMESTAMPDIFF(MINUTE, opened_at, resolved_at) BETWEEN 5 AND 30 THEN 1 ELSE 0 END) as medium_fails,
+                SUM(CASE WHEN TIMESTAMPDIFF(MINUTE, opened_at, resolved_at) > 30 THEN 1 ELSE 0 END) as critical_fails
+            ')
+            ->first();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'heatmap' => $heatmapRaw,
+                'distribution_by_type' => $typeDistribution,
+                'duration_ranges' => [
+                    'Micro (< 5 min)' => (int) $durationDistribution->micro_fails,
+                    'Media (5-30 min)' => (int) $durationDistribution->medium_fails,
+                    'Crítica (> 30 min)' => (int) $durationDistribution->critical_fails,
+                ]
+            ]
+        ]);
+    }
+
+    public function getLiveStatus()
+    {
+        // 1. Contadores Rápidos
+        $totalServices = Service::where('is_active', true)->count();
+
+        // Obtenemos los incidentes que están "open" AHORA MISMO
+        $activeIncidents = Incident::with('service:id,name')
+            ->where('status', 'open')
+            ->orderBy('opened_at', 'desc')
+            ->get();
+
+        $downServicesCount = $activeIncidents->unique('service_id')->count();
+        $upServicesCount = $totalServices - $downServicesCount;
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'summary' => [
+                    'total' => $totalServices,
+                    'up' => $upServicesCount,
+                    'down' => $downServicesCount,
+                    'status_color' => $downServicesCount > 0 ? 'error' : 'success' // Semáforo global
+                ],
+                // Mandamos los incidentes activos para mostrarlos en tarjetas rojas
+                'active_alerts' => $activeIncidents->map(function($incident) {
+                    return [
+                        'id' => $incident->id,
+                        'service_name' => $incident->service ? $incident->service->name : 'Desconocido',
+                        'description' => $incident->description,
+                        'timestamp' => $incident->opened_at // Unix timestamp para el frontend
+                    ];
+                })
             ]
         ]);
     }

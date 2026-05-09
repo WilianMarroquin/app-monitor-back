@@ -234,7 +234,7 @@ class MenuOpcionesTableSeeder extends Seeder
 
         MenuOpcion::create([
             "titulo" => "Monitor en Vivo",
-            "icono" => "ri-monitor-line",
+            "icono" => "ri-mac-fill",
             "ruta" => 'dashboard-live',
             "orden" => 22,
             "action" => "Listar Dashboard Monitor en Vivo",
