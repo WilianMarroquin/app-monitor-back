@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -137,6 +138,11 @@ class Service extends Model
             'service_id',
             'area_id'
         );
+    }
+
+    public function scopeSoloActivos(Builder $query)
+    {
+        return $query->where('is_active', true);
     }
 
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AnalyticsController;
+use App\Http\Controllers\Api\MonitorApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('uptime-response', [AnalyticsController::class, 'getUptimeAndResponse']);
         Route::get('failure-patterns', [AnalyticsController::class, 'getFailurePatterns']);
         Route::get('live-status', [AnalyticsController::class, 'getLiveStatus']);
+    });
+
+    Route::middleware(['auth:sanctum', 'ability:monitor:access'])->group(function () {
+
+        Route::get('/external/services', [MonitorApiController::class, 'getServicesToMonitor']);
+        Route::post('/external/results', [MonitorApiController::class, 'storePingResult']);
+
     });
 
 

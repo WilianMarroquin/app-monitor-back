@@ -6,9 +6,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $status
@@ -29,19 +30,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class ServiceLog extends Model
 {
 
-    
+
     use HasFactory;
 
     protected $table = 'service_logs';
 
+    public $timestamps = false;
 
-    protected $fillable =
-        [
-    'status',
-    'response_time',
-    'checked_at',
-    'service_id'
-];
+    protected $fillable = [
+        'status',
+        'response_time',
+        'checked_at',
+        'service_id'
+    ];
 
 
     /**
@@ -49,8 +50,7 @@ class ServiceLog extends Model
      *
      * @var array
      */
-    protected $casts =
-        [
+    protected $casts = [
         'id' => 'integer',
         'status' => 'string',
         'response_time' => 'float',
@@ -59,19 +59,17 @@ class ServiceLog extends Model
     ];
 
 
-
     /**
      * Validation rules
      *
      * @var array
      */
-    public static $rules =
-    [
-    'status' => 'required|string',
-    'response_time' => 'required|numeric',
-    'checked_at' => 'required|date',
-    'service_id' => 'required|integer',
-];
+    public static $rules = [
+        'status' => 'required|string',
+        'response_time' => 'required|numeric',
+        'checked_at' => 'required|date',
+        'service_id' => 'required|integer',
+    ];
 
 
     /**
@@ -79,7 +77,7 @@ class ServiceLog extends Model
      *
      * @var array
      */
-    public static $messages =[
+    public static $messages = [
 
     ];
 
@@ -89,9 +87,9 @@ class ServiceLog extends Model
      *
      * @var array
      */
-    public function service()
+    public function service(): BelongsTo
     {
-    return $this->belongsTo(Service::class,'service_id','id');
+        return $this->belongsTo(Service::class, 'service_id', 'id');
     }
 
 }
