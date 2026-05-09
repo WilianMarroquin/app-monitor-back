@@ -196,6 +196,57 @@ class MenuOpcionesTableSeeder extends Seeder
             "icono" => null,
             "ruta" => null,
             "orden" => 18,
+            "titulo_seccion" => "Analítica",
+            "action" => "Ver Modulo Analitica",
+            "subject" => "Dashboard",
+            "parent_id" => null
+        ]);
+
+        $moduloDashboard = MenuOpcion::create([
+            "titulo" => "Dahsboard",
+            "icono" => "ri-dashboard-2-fill",
+            "ruta" => null,
+            "orden" => 19,
+            "action" => "Listar Modulo Dashboard",
+            "subject" => "Dashboard",
+            "parent_id" => null
+        ]);
+
+        MenuOpcion::create([
+            "titulo" => "Disponibilidad",
+            "icono" => "ri-bar-chart-2-fill",
+            "ruta" => 'dashboard-disponibilidad',
+            "orden" => 20,
+            "action" => "Listar Dashboard Disponibilidad",
+            "subject" => "Dashboard",
+            "parent_id" => $moduloDashboard->id
+        ]);
+
+        MenuOpcion::create([
+            "titulo" => "Patrones de Fallo",
+            "icono" => "ri-pie-chart-2-fill",
+            "ruta" => 'dashboard-patrones-fallo',
+            "orden" => 21,
+            "action" => "Listar Dashboard Patrones de Fallo",
+            "subject" => "Dashboard",
+            "parent_id" => $moduloDashboard->id
+        ]);
+
+        MenuOpcion::create([
+            "titulo" => "Monitor en Vivo",
+            "icono" => "ri-monitor-line",
+            "ruta" => 'dashboard-live',
+            "orden" => 22,
+            "action" => "Listar Dashboard Monitor en Vivo",
+            "subject" => "Dashboard",
+            "parent_id" => $moduloDashboard->id
+        ]);
+
+        MenuOpcion::create([
+            "titulo" => null,
+            "icono" => null,
+            "ruta" => null,
+            "orden" => 23,
             "titulo_seccion" => "Modulo Programación",
             "action" => "Ver Modulo Desarrollo",
             "subject" => "Desarrollo",
@@ -206,7 +257,7 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => "Developers",
             "icono" => "ri-tools-fill",
             "ruta" => "second-page",
-            "orden" => 19,
+            "orden" => 24,
             "action" => "Ver Modulo Desarrollo",
             "subject" => "Desarrollo",
             "parent_id" => null
@@ -216,7 +267,7 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => "Configuraciones",
             "icono" => "ri-settings-5-fill",
             "ruta" => "dev-configuraciones",
-            "orden" => 20,
+            "orden" => 25,
             "action" => "Listar Configuraciones",
             "subject" => "Configuracion",
             "parent_id" => $developers->id
@@ -226,7 +277,7 @@ class MenuOpcionesTableSeeder extends Seeder
             "titulo" => "Componentes",
             "icono" => "ri-code-box-line",
             "ruta" => "dev-componentes",
-            "orden" => 21,
+            "orden" => 26,
             "action" => "Listar Componentes",
             "subject" => "Desarrollo",
             "parent_id" => $developers->id

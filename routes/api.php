@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AnalyticsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('incidents', App\Http\Controllers\Api\IncidentApiController::class)
         ->parameters(['incidents' => 'incident']);
+
+
+    Route::prefix('analytics')->group(function () {
+        Route::get('uptime-response', [AnalyticsController::class, 'getUptimeAndResponse']);
+    });
 
 
 });
