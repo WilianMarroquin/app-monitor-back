@@ -55,6 +55,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static Builder<static>|Service wherePort($value)
  * @method static Builder<static>|Service whereServerId($value)
  * @method static Builder<static>|Service whereTiempoEspera($value)
+ * @property-read string $tipo_para_json
  * @mixin \Eloquent
  */
 class Service extends Model
@@ -184,5 +185,21 @@ class Service extends Model
         }
 
         return $contactos;
+    }
+
+    public function getTipoParaJsonAttribute(): string
+    {
+        return $this->type === 'web' ? 'HTTP' : 'DATABASE';
+    }
+
+    public function esWeb(): bool
+    {
+        return $this->type === 'web';
+    }
+
+    public function esBaseDatos(): bool
+    {
+        return $this->type === 'database';
+
     }
 }

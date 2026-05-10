@@ -20,16 +20,16 @@ class MonitorApiController extends Controller
                 return [
                     'id'            => $service->id,
                     'name'          => $service->name,
-                    'type'          => $service->httpMethod ?? 'HTTP',
+                    'type'          => $service->tipo_para_json,
                     'testMethod'    => $service->testMethod ?? 'HTTP', // Si en BD es test_method, cámbialo a $service->test_method
                     'checkInterval' => $service->tiempo_espera ?? 60,  // Igual aquí, si es check_interval...
                     'httpUrl'       => $service?->detalleWeb?->url ?? null,
-                    'httpMethod'    => $service->httpMethod ?? 'GET',
+                    'httpMethod'    => $service->esWeb() ? ($service->httpMethod ?? 'GET') : null,
                     'port'          => $service->port,
 
                     // Credenciales DB (si aplica)
                     'dbHost'        => $service->detalleDataBase?->host_ip,
-                    'dbPort'        => $service->port,
+                    'dbPort'        => $service->esBaseDatos() ? ($service->detalleDataBase?->port ?? 3306) : null,
                     'dbName'       =>  $service->detalleDataBase?->name,
                     'dbUsername'    => $service->detalleDataBase?->username,
                     'dbPassword'    => $service->detalleDataBase?->password,
