@@ -146,7 +146,7 @@ class Service extends Model
 
     public function detalleDataBase(): HasOne
     {
-        return $this->hasOne(ServiceDataBase::class, 'service_id');
+        return $this->hasOne(ServiceDatabase::class, 'service_id');
     }
 
     public function server(): BelongsTo

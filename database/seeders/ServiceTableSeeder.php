@@ -19,12 +19,12 @@ class ServiceTableSeeder extends Seeder
             'type' => 'web',
             'httpMethod' => 'GET',
             'testMethod' => 'HTTP',
-            'is_active' => true
+            'is_active' => true,
+            'server_id' => 1
         ]);
 
         $service1->detalleWeb()->firstOrCreate([
             'url' => 'https://apps2.mineduc.gob.gt/sdr/',
-            'server_id' => 1
         ]);
 
         $service2 = Service::firstOrCreate([
@@ -32,38 +32,36 @@ class ServiceTableSeeder extends Seeder
             'type' => 'web',
             'httpMethod' => 'GET',
             'testMethod' => 'HTTP',
-            'is_active' => true
+            'is_active' => true,
+            'server_id' => 1
         ]);
 
         $service2->detalleWeb()->firstOrCreate([
-            'url' => 'https://apps2.mineduc.gob.gt/SBI/',
-            'server_id' => 1
-        ]);
+            'url' => 'https://apps2.mineduc.gob.gt/SBI/',]);
 
         $service3 = Service::firstOrCreate([
             'name' => '-SBM- SISTEMA BECA MINISTERIAL',
             'type' => 'web',
             'httpMethod' => 'GET',
             'testMethod' => 'HTTP',
-            'is_active' => true
+            'is_active' => true,
+            'server_id' => 1
         ]);
 
         $service3->detalleWeb()->firstOrCreate([
-            'url' => 'https://sbm.mineduc.gob.gt/',
-            'server_id' => 1
-        ]);
+            'url' => 'https://sbm.mineduc.gob.gt/',]);
 
         $service4 = Service::firstOrCreate([
             'name' => '-SIRE- SISTEMA DE REGISTROS EDUCATIVOS ADMINISTRATIVO',
             'type' => 'web',
             'httpMethod' => 'GET',
             'testMethod' => 'HTTP',
-            'is_active' => true
+            'is_active' => true,
+            'server_id' => 2
         ]);
 
         $service4->detalleWeb()->firstOrCreate([
             'url' => 'https://apps2.mineduc.gob.gt/SIRE/wbFrmLogin.aspx',
-            'server_id' => 2
         ]);
 
         $service5 = Service::firstOrCreate([
@@ -71,12 +69,12 @@ class ServiceTableSeeder extends Seeder
             'type' => 'web',
             'httpMethod' => 'GET',
             'testMethod' => 'HTTP',
-            'is_active' => true
+            'is_active' => true,
+            'server_id' => 1
         ]);
 
         $service5->detalleWeb()->firstOrCreate([
             'url' => 'https://apps2.mineduc.gob.gt/MINEDUC.ESIRH.WEB/frmLogin.aspx',
-            'server_id' => 1
         ]);
 
         $service6 = Service::firstOrCreate([
@@ -84,12 +82,12 @@ class ServiceTableSeeder extends Seeder
             'type' => 'web',
             'httpMethod' => 'GET',
             'testMethod' => 'HTTP',
-            'is_active' => true
+            'is_active' => true,
+            'server_id' => 4
         ]);
 
         $service6->detalleWeb()->firstOrCreate([
             'url' => 'http://sistemas5/WEBSIAD/Wbfdefault.aspx',
-            'server_id' => 4
         ]);
     }
 }
