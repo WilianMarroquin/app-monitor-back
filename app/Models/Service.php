@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $name
@@ -117,7 +117,7 @@ class Service extends Model
         'httpMethod' => 'nullable|string|max:45',
         'service_web' => 'nullable',
         'service_database' => 'nullable',
-        'port' => 'nullable|string|max:10',
+        'port' => 'nullable|integer',
         'tiempo_espera' => 'nullable|integer',
         'entorno' => 'nullable|string|in:Desarrollo,Produccion',
     ];
