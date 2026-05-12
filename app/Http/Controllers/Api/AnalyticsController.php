@@ -237,4 +237,117 @@ class AnalyticsController extends Controller
             ]
         ]);
     }
+    public function getDashboardSummary(Request $request)
+    {
+        $days = 30; // Los últimos 30 días como base de contexto
+        $startDate = now()->subDays($days)->startOfDay();
+
+        // ==========================================
+        // 📊 1. KPIs GLOBALES
+        // ==========================================
+        $activeServices = Service::where('is_active', true)->count();
+        $criticalIncidents = Incident::where('status', 'open')->count();
+
+        // Cálculo de Uptime Global
+        $totalPeriodMinutes = $days * 24 * 60;
+        $totalPossibleMinutes = $totalPeriodMinutes * ($activeServices > 0 ? $activeServices : 1);
+
+        $totalDowntimeMinutes = Incident::where('opened_at', '>=', $startDate)
+            ->whereNotNull('resolved_at')
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, opened_at, resolved_at)) as total_down')
+            ->value('total_down') ?? 0;
+
+        $uptimePercentage = 100;
+        if ($totalPossibleMinutes > 0) {
+            $uptimePercentage = (($totalPossibleMinutes - $totalDowntimeMinutes) / $totalPossibleMinutes) * 100;
+        }
+
+        // Latencia Promedio (Requiere la tabla service_logs)
+        $avgLatency = DB::table('service_logs')
+            ->where('checked_at', '>=', $startDate)
+            ->avg('response_time') ?? 0;
+
+        // ==========================================
+        // 🔥 2. ZONA CALIENTE (Incidentes Activos)
+        // ==========================================
+        // Usamos Eager Loading para traer los datos del servicio y las áreas sin problema de N+1
+        $hotZoneRaw = Incident::with(['service.areas']) // Asumiendo que tienes la relación 'areas' en el modelo Service
+        ->where('status', 'open')
+            ->orderBy('opened_at', 'desc')
+            ->get();
+
+        $hotZone = $hotZoneRaw->map(function ($incident) {
+            return [
+                'id' => $incident->id,
+                'service_name' => $incident->service->name ?? 'Desconocido',
+                // Si tienes la tabla pivote services_has_areas mapeada:
+                'area' => $incident->service->areas->first()->name ?? 'General',
+                'type' => $incident->service->type ?? 'HTTP',
+                // diffForHumans formatea fechas a "hace 2 horas", "hace 5 minutos", etc.
+                'since' => Carbon::parse($incident->opened_at)->diffForHumans(),
+                'error' => $incident->description ?? 'Sin descripción de error',
+            ];
+        });
+
+        $systemHealth = Service::where('is_active', true)
+            ->select('id', 'name', 'type')
+            ->get()
+            ->map(function ($service) {
+                return [
+                    'id' => $service->id,
+                    'name' => $service->name,
+                    'type' => $service->type,
+                    'status' => 'operational' // Si no está en hot_zone, asumimos que está al 100%
+                ];
+            });
+
+        // ==========================================
+        // 📡 3. TELEMETRÍA (Heatmap y Lentos)
+        // ==========================================
+
+        // Heatmap: Días y Horas con más fallas
+        $heatmap = Incident::where('opened_at', '>=', $startDate)
+            ->selectRaw('DAYOFWEEK(opened_at) as day_of_week, HOUR(opened_at) as hour_of_day, COUNT(*) as total')
+            ->groupBy(DB::raw('DAYOFWEEK(opened_at)'), DB::raw('HOUR(opened_at)'))
+            ->get();
+
+        // Servicios más lentos (Top 5 bottlenecks)
+        $slowestServices = DB::table('service_logs')
+            ->join('services', 'service_logs.service_id', '=', 'services.id')
+            ->where('service_logs.checked_at', '>=', $startDate)
+            ->selectRaw('services.name, AVG(service_logs.response_time) as tiempo_espera')
+            ->groupBy('services.id', 'services.name')
+            ->orderByDesc('tiempo_espera')
+            ->limit(5)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'name' => $item->name,
+                    // Redondeamos para que la gráfica de barras del front se vea limpia
+                    'tiempo_espera' => round($item->tiempo_espera)
+                ];
+            });
+
+        // ==========================================
+        // 🚀 4. RESPUESTA AL FRONTEND
+        // ==========================================
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'kpis' => [
+                    // Devolvemos los formatos exactos que Vue espera (ej. '99.98%', '120ms')
+                    'global_uptime' => round($uptimePercentage, 2) . '%',
+                    'active_services' => $activeServices,
+                    'critical_incidents' => $criticalIncidents,
+                    'avg_latency' => round($avgLatency) . 'ms'
+                ],
+                'hot_zone' => $hotZone,
+                'system_health' => $systemHealth,
+                'telemetry' => [
+                    'heatmap' => $heatmap,
+                    'slowest_services' => $slowestServices
+                ]
+            ]
+        ]);
+    }
 }
