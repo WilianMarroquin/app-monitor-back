@@ -59,7 +59,7 @@ class AnalyticsController extends Controller
         // ==========================================
         // 📊 MÉTRICA 1: MTTR (Tiempo Medio de Resolución)
         // ==========================================
-        // Usamos TIMESTAMPDIFF de MySQL para sacar la diferencia en minutos directamente en la BD
+        // El MTTR sí debe calcularse solo sobre incidentes cerrados (donde resolved_at no es nulo)
         $mttrMinutes = (clone $baseQuery)
             ->whereNotNull('resolved_at')
             ->selectRaw('AVG(TIMESTAMPDIFF(MINUTE, opened_at, resolved_at)) as mttr')
@@ -79,9 +79,9 @@ class AnalyticsController extends Controller
         // ==========================================
         // 📊 MÉTRICA 2: TIEMPO TOTAL DE CAÍDA (Downtime)
         // ==========================================
+        // Aplicamos COALESCE: Si resolved_at es null, usa NOW() para sumar los minutos en tiempo real
         $totalDowntimeMinutes = (clone $baseQuery)
-            ->whereNotNull('resolved_at')
-            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, opened_at, resolved_at)) as total_down')
+            ->selectRaw('SUM(TIMESTAMPDIFF(MINUTE, opened_at, COALESCE(resolved_at, NOW()))) as total_down')
             ->value('total_down');
 
         // ==========================================
@@ -102,11 +102,12 @@ class AnalyticsController extends Controller
         // ==========================================
         // 📊 MÉTRICA 4: TOP 5 SERVICIOS CON MÁS FALLAS
         // ==========================================
+        // Aplicamos el mismo COALESCE para que los incidentes vivos afecten la gráfica de los Top Offenders
         $topOffendersQuery = Incident::selectRaw('
-                service_id,
-                COUNT(*) as total_outages,
-                SUM(TIMESTAMPDIFF(MINUTE, opened_at, resolved_at)) as total_downtime
-            ')
+            service_id,
+            COUNT(*) as total_outages,
+            SUM(TIMESTAMPDIFF(MINUTE, opened_at, COALESCE(resolved_at, NOW()))) as total_downtime
+        ')
             ->whereBetween('opened_at', [$startDate, $endDate])
             ->groupBy('service_id')
             ->orderByDesc('total_outages')
@@ -134,11 +135,9 @@ class AnalyticsController extends Controller
                     'mttr_minutes' => round($mttrMinutes ?? 0, 2),
                     'total_incidents' => (clone $baseQuery)->count(),
                     'open_incidents' => (clone $baseQuery)->where('status', 'open')->count(),
-                    // 👇 NUEVO KPI INYECTADO 👇
                     'alert_fatigue' => $alertFatigueCount,
                 ],
                 'top_offenders' => $topOffenders,
-                // 👇 NUEVA SERIE DE TIEMPO INYECTADA 👇
                 'trend_data' => $trendData
             ]
         ]);
@@ -243,14 +242,20 @@ class AnalyticsController extends Controller
         $startDate = now()->subDays($days)->startOfDay();
 
         // ==========================================
-        // 📊 1. KPIs GLOBALES
+        // 📊 1. KPIs GLOBALES (Refactorizados)
         // ==========================================
-        $activeServices = Service::where('is_active', true)->count();
+        // Total de servicios en el sistema (is_active = 1 significa que los estamos monitoreando)
+        $registeredServices = Service::where('is_active', true)->count();
+
+        // Incidentes críticos (Caídos actualmente)
         $criticalIncidents = Incident::where('status', 'open')->count();
+
+        // Servicios Operativos Reales (El total menos los que están caídos)
+        $operationalServices = $registeredServices - $criticalIncidents;
 
         // Cálculo de Uptime Global
         $totalPeriodMinutes = $days * 24 * 60;
-        $totalPossibleMinutes = $totalPeriodMinutes * ($activeServices > 0 ? $activeServices : 1);
+        $totalPossibleMinutes = $totalPeriodMinutes * ($registeredServices > 0 ? $registeredServices : 1);
 
         $totalDowntimeMinutes = Incident::where('opened_at', '>=', $startDate)
             ->whereNotNull('resolved_at')
@@ -335,9 +340,10 @@ class AnalyticsController extends Controller
             'success' => true,
             'data' => [
                 'kpis' => [
-                    // Devolvemos los formatos exactos que Vue espera (ej. '99.98%', '120ms')
+                    // Devolvemos los formatos exactos que Vue espera
                     'global_uptime' => round($uptimePercentage, 2) . '%',
-                    'active_services' => $activeServices,
+                    'registered_services' => $registeredServices,
+                    'operational_services' => $operationalServices > 0 ? $operationalServices : 0,
                     'critical_incidents' => $criticalIncidents,
                     'avg_latency' => round($avgLatency) . 'ms'
                 ],

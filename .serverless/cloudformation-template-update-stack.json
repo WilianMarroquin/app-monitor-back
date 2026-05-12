@@ -2,6 +2,75 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "The AWS CloudFormation template for this Serverless application",
   "Resources": {
+    "ServerlessDeploymentBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ServerlessDeploymentBucketPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "ServerlessDeploymentBucket"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::",
+                      {
+                        "Ref": "ServerlessDeploymentBucket"
+                      },
+                      "/*"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::",
+                      {
+                        "Ref": "ServerlessDeploymentBucket"
+                      }
+                    ]
+                  ]
+                }
+              ],
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": false
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
     "ApiLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
@@ -127,8 +196,10 @@
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
-          "S3Bucket": "serverless-framework-deployments-us-east-1-7ae88e56-57f2",
-          "S3Key": "serverless/laravel-api-monitor/production/1778374856942-2026-05-10T01:00:56.942Z/laravel-api-monitor.zip"
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/laravel-api-monitor/production/1778603434567-2026-05-12T16:30:34.567Z/laravel-api-monitor.zip"
         },
         "Handler": "public/index.php",
         "Runtime": "provided.al2023",
@@ -182,8 +253,10 @@
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
-          "S3Bucket": "serverless-framework-deployments-us-east-1-7ae88e56-57f2",
-          "S3Key": "serverless/laravel-api-monitor/production/1778374856942-2026-05-10T01:00:56.942Z/laravel-api-monitor.zip"
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/laravel-api-monitor/production/1778603434567-2026-05-12T16:30:34.567Z/laravel-api-monitor.zip"
         },
         "Handler": "Bref\\LaravelBridge\\Queue\\QueueHandler",
         "Runtime": "provided.al2023",
@@ -231,25 +304,25 @@
         "JobsWorkerLogGroup"
       ]
     },
-    "ApiLambdaVersionY27pK2YDf8By3VTH4frWiaLaoJORYtc1adUmzv2gE": {
+    "ApiLambdaVersionGhr6bL3rR54PlmK0Bvor1DyG74xTfT7VH7aaalWnJw": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ApiLambdaFunction"
         },
-        "CodeSha256": "b8eGw5nbnVHvLmqGlK/ylSGYgWM4Z92qz3o/77St0J8=",
+        "CodeSha256": "mVl8mllXLcLm23HgGAtzpvV720/HyjH35s8rTTXIJ2Y=",
         "Description": "Laravel API Monitor"
       }
     },
-    "JobsWorkerLambdaVersionA4Vd1va37gu5v0dkmIuAvjS7qplvp3EohUKKa2Mxj4": {
+    "JobsWorkerLambdaVersion6F814At9jpbOxsPthyOyZhPDgm3KrKGHBuGstaOGxQs": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "JobsWorkerLambdaFunction"
         },
-        "CodeSha256": "b8eGw5nbnVHvLmqGlK/ylSGYgWM4Z92qz3o/77St0J8="
+        "CodeSha256": "mVl8mllXLcLm23HgGAtzpvV720/HyjH35s8rTTXIJ2Y="
       }
     },
     "JobsWorkerEventSourceMappingSQSJobsQueueCEDBAE3E": {
@@ -403,7 +476,9 @@
   },
   "Outputs": {
     "ServerlessDeploymentBucketName": {
-      "Value": "serverless-framework-deployments-us-east-1-7ae88e56-57f2",
+      "Value": {
+        "Ref": "ServerlessDeploymentBucket"
+      },
       "Export": {
         "Name": "sls-laravel-api-monitor-production-ServerlessDeploymentBucketName"
       }
@@ -411,7 +486,7 @@
     "ApiLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ApiLambdaVersionY27pK2YDf8By3VTH4frWiaLaoJORYtc1adUmzv2gE"
+        "Ref": "ApiLambdaVersionGhr6bL3rR54PlmK0Bvor1DyG74xTfT7VH7aaalWnJw"
       },
       "Export": {
         "Name": "sls-laravel-api-monitor-production-ApiLambdaFunctionQualifiedArn"
@@ -420,7 +495,7 @@
     "JobsWorkerLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "JobsWorkerLambdaVersionA4Vd1va37gu5v0dkmIuAvjS7qplvp3EohUKKa2Mxj4"
+        "Ref": "JobsWorkerLambdaVersion6F814At9jpbOxsPthyOyZhPDgm3KrKGHBuGstaOGxQs"
       },
       "Export": {
         "Name": "sls-laravel-api-monitor-production-JobsWorkerLambdaFunctionQualifiedArn"

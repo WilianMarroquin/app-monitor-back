@@ -13,7 +13,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $primer_nombre
@@ -84,6 +84,7 @@ class User extends Authenticatable implements HasMedia
         'segundo_apellido',
         'email',
         'password',
+        'estado_id',
     ];
 
     /**
@@ -105,6 +106,8 @@ class User extends Authenticatable implements HasMedia
         'segundo_apellido' => 'nullable|string|max:255',
         'email' => 'required|string|email|max:255|unique:users',
         'password' => 'required|string|min:8',
+        'estado_id' => 'nullable|integer',
+
     ];
 
     //definir reglas de mensajes
