@@ -1,0 +1,78 @@
+service: laravel-api-monitor
+
+provider:
+  name: aws
+  region: us-east-1
+  runtime: provided.al2023
+  stage: production
+  memorySize: 1024
+  environment:
+    APP_URL: https://api.monitor.mrqn-labs.com
+    APP_ENV: local
+    APP_DEBUG: true
+    APP_KEY: ${ssm:/app-budget/APP_KEY}
+
+    # Base de datos
+    DB_CONNECTION: mysql
+    DB_HOST: ${ssm:/monitor/DB_HOST}
+    DB_PORT: 4000
+    DB_DATABASE: ${ssm:/monitor/DB_DATABASE}
+    DB_USERNAME: ${ssm:/monitor/DB_USERNAME}
+    DB_PASSWORD: ${ssm:/monitor/DB_PASSWORD}
+
+    # Queue
+    QUEUE_CONNECTION: sqs
+    SQS_QUEUE: ${construct:jobs.queueUrl}
+    SQS_PREFIX: ''
+
+    SESSION_DRIVER: cookie
+    CACHE_DRIVER: array
+    SESSION_DOMAIN: .monitor.mrqn-labs.com
+    FRONTEND_URL: https://monitor.mrqn-labs.com
+    SANCTUM_STATEFUL_DOMAINS: monitor.mrqn-labs.com,api.monitor.mrqn-labs.com
+    MYSQL_ATTR_SSL_CA: /etc/pki/tls/certs/ca-bundle.crt
+    GEMINI_API_KEY: ${ssm:/app-budget/API_KEY_GEMINI}
+
+plugins:
+  - ./vendor/bref/bref
+  - serverless-domain-manager
+  - serverless-lift
+  - ./vendor/bref/extra-php-extensions # 🚀 1. Agrega esta línea
+custom:
+  customDomain:
+    domainName: api.monitor.mrqn-labs.com
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+    apiType: http                   # Esto indica API Gateway v2 (HTTP API)
+    certificateName: monitor.mrqn-labs.com
+    endpointType: regional
+
+functions:
+  api:
+    handler: public/index.php
+    runtime: php-82-fpm
+    description: 'Laravel API Monitor'
+    timeout: 28
+    events:
+      - httpApi: '*'
+    layers:
+      - ${bref-extra:gd-php-82}
+constructs:
+  # Aquí nace el Worker
+  jobs:
+    type: queue
+    worker:
+      # Usa el handler oficial de Bref para Laravel
+      # ¡No necesitas crear un archivo worker.php manual!
+      handler: Bref\LaravelBridge\Queue\QueueHandler
+      runtime: php-82
+      timeout: 60 # Dale 60s para que Gemini piense tranquilo
+package:
+  exclude:
+    - node_modules/**
+    - public/storage
+    - resources/assets/**
+    - storage/**
+    - tests/**
+    - .env

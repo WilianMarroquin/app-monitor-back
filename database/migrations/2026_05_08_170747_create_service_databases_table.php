@@ -15,7 +15,7 @@ return new class extends Migration
             $table->unsignedBigInteger('service_id')->index('fk_service_databases_services1_idx');
             $table->string('db_type', 65);
             $table->string('host_ip', 350);
-            $table->string('port', 10);
+            $table->string('name', 150);
             $table->string('username', 150);
             $table->string('password');
             $table->timestamps();

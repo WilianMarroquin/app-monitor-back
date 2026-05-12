@@ -43,6 +43,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property-read \App\Models\ServiceDatabase|null $detalleDataBase
  * @property-read \App\Models\ServiceWeb|null $detalleWeb
  * @property-read \App\Models\Server|null $server
+ * @property int|null $port
+ * @property int|null $tiempo_espera
+ * @property string|null $entorno
+ * @property int|null $server_id
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Area> $areas
+ * @property-read int|null $areas_count
+ * @property-read array $contactos
+ * @method static Builder<static>|Service soloActivos()
+ * @method static Builder<static>|Service whereEntorno($value)
+ * @method static Builder<static>|Service wherePort($value)
+ * @method static Builder<static>|Service whereServerId($value)
+ * @method static Builder<static>|Service whereTiempoEspera($value)
+ * @property-read string $tipo_para_json
  * @mixin \Eloquent
  */
 class Service extends Model
@@ -60,7 +73,11 @@ class Service extends Model
         'type',
         'is_active',
         'testMethod',
-        'httpMethod'
+        'httpMethod',
+        'port',
+        'tiempo_espera',
+        'entorno',
+        'server_id',
     ];
 
 
@@ -77,6 +94,9 @@ class Service extends Model
         'is_active' => 'boolean',
         'testMethod' => 'string',
         'httpMethod' => 'string',
+        'port' => 'integer',
+        'tiempo_espera' => 'integer',
+        'server_id' => 'integer',
         'created_at' => 'timestamp',
         'updated_at' => 'timestamp',
         'deleted_at' => 'timestamp',
@@ -97,6 +117,9 @@ class Service extends Model
         'httpMethod' => 'nullable|string|max:45',
         'service_web' => 'nullable',
         'service_database' => 'nullable',
+        'port' => 'nullable|integer',
+        'tiempo_espera' => 'nullable|integer',
+        'entorno' => 'nullable|string|in:Desarrollo,Produccion',
     ];
 
 
@@ -123,7 +146,7 @@ class Service extends Model
 
     public function detalleDataBase(): HasOne
     {
-        return $this->hasOne(ServiceDataBase::class, 'service_id');
+        return $this->hasOne(ServiceDatabase::class, 'service_id');
     }
 
     public function server(): BelongsTo
@@ -145,4 +168,38 @@ class Service extends Model
         return $query->where('is_active', true);
     }
 
+    public function getContactosAttribute(): array
+    {
+        $contactos = [];
+        /**
+         * @var Service $this
+         * @var Area $area
+         */
+        foreach ($this->areas as $area) {
+            foreach ($area->contactosAsignados as $contacto) {
+                $contactos[] = [
+                    'name' => $contacto->nombre_completo,
+                    'telefono' => $contacto->telefono,
+                ];
+            }
+        }
+
+        return $contactos;
+    }
+
+    public function getTipoParaJsonAttribute(): string
+    {
+        return $this->type === 'web' ? 'HTTP' : 'DATABASE';
+    }
+
+    public function esWeb(): bool
+    {
+        return $this->type === 'web';
+    }
+
+    public function esBaseDatos(): bool
+    {
+        return $this->type === 'database';
+
+    }
 }

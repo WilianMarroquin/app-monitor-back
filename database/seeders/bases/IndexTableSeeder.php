@@ -14,8 +14,6 @@ class IndexTableSeeder extends Seeder
 
         $this->call([
             UsersEstadosTableSeeder::class,
-            UserSeeder::class,
-            RolesPermisosBaseTableSeeder::class,
             MenuOpcionesTableSeeder::class,
             ConfiguracionesTableSeeder::class,
         ]);

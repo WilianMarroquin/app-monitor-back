@@ -1,0 +1,485 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "The AWS CloudFormation template for this Serverless application",
+  "Resources": {
+    "ApiLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/laravel-api-monitor-production-api"
+      }
+    },
+    "JobsWorkerLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/laravel-api-monitor-production-jobsWorker"
+      }
+    },
+    "IamRoleLambdaExecution": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "lambda.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": {
+              "Fn::Join": [
+                "-",
+                [
+                  "laravel-api-monitor",
+                  "production",
+                  "lambda"
+                ]
+              ]
+            },
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:CreateLogStream",
+                    "logs:CreateLogGroup",
+                    "logs:TagResource"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/laravel-api-monitor-production*:*"
+                    }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:PutLogEvents"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/laravel-api-monitor-production*:*:*"
+                    }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "sqs:SendMessage",
+                    "sqs:ChangeMessageVisibility"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::GetAtt": [
+                        "jobsQueueCEDBAE3E",
+                        "Arn"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "sqs:ReceiveMessage",
+                    "sqs:DeleteMessage",
+                    "sqs:GetQueueAttributes"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::GetAtt": [
+                        "jobsQueueCEDBAE3E",
+                        "Arn"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "Path": "/",
+        "RoleName": {
+          "Fn::Join": [
+            "-",
+            [
+              "laravel-api-monitor",
+              "production",
+              {
+                "Ref": "AWS::Region"
+              },
+              "lambdaRole"
+            ]
+          ]
+        }
+      }
+    },
+    "ApiLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": "serverless-framework-deployments-us-east-1-7ae88e56-57f2",
+          "S3Key": "serverless/laravel-api-monitor/production/1778374856942-2026-05-10T01:00:56.942Z/laravel-api-monitor.zip"
+        },
+        "Handler": "public/index.php",
+        "Runtime": "provided.al2023",
+        "FunctionName": "laravel-api-monitor-production-api",
+        "MemorySize": 1024,
+        "Timeout": 28,
+        "Description": "Laravel API Monitor",
+        "Environment": {
+          "Variables": {
+            "APP_URL": "https://api.monitor.mrqn-labs.com",
+            "APP_ENV": "local",
+            "APP_DEBUG": "true",
+            "APP_KEY": "base64:c26n7p7lFdoCgX3D8BKXkRQEI+V3IbwekVtnPUinym8=",
+            "DB_CONNECTION": "mysql",
+            "DB_HOST": "gateway01.us-east-1.prod.aws.tidbcloud.com",
+            "DB_PORT": "4000",
+            "DB_DATABASE": "db_monitor",
+            "DB_USERNAME": "w9U3UG9mZYYWhQk.root",
+            "DB_PASSWORD": "GTIHvrFGSr1lDr0U",
+            "QUEUE_CONNECTION": "sqs",
+            "SQS_QUEUE": {
+              "Ref": "jobsQueueCEDBAE3E"
+            },
+            "SQS_PREFIX": "",
+            "SESSION_DRIVER": "cookie",
+            "CACHE_DRIVER": "array",
+            "SESSION_DOMAIN": ".monitor.mrqn-labs.com",
+            "FRONTEND_URL": "https://monitor.mrqn-labs.com",
+            "SANCTUM_STATEFUL_DOMAINS": "monitor.mrqn-labs.com,api.monitor.mrqn-labs.com",
+            "MYSQL_ATTR_SSL_CA": "/etc/pki/tls/certs/ca-bundle.crt",
+            "GEMINI_API_KEY": "AIzaSyC2u-zZVf7b0aof4ptJf_Z1BT7xKxFujlU",
+            "BREF_RUNTIME": "Bref\\FpmRuntime\\Main"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Layers": [
+          "arn:aws:lambda:us-east-1:873528684822:layer:php-82:19",
+          "arn:aws:lambda:us-east-1:403367587399:layer:gd-php-82:21"
+        ]
+      },
+      "DependsOn": [
+        "ApiLogGroup"
+      ]
+    },
+    "JobsWorkerLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": "serverless-framework-deployments-us-east-1-7ae88e56-57f2",
+          "S3Key": "serverless/laravel-api-monitor/production/1778374856942-2026-05-10T01:00:56.942Z/laravel-api-monitor.zip"
+        },
+        "Handler": "Bref\\LaravelBridge\\Queue\\QueueHandler",
+        "Runtime": "provided.al2023",
+        "FunctionName": "laravel-api-monitor-production-jobsWorker",
+        "MemorySize": 1024,
+        "Timeout": 60,
+        "Environment": {
+          "Variables": {
+            "APP_URL": "https://api.monitor.mrqn-labs.com",
+            "APP_ENV": "local",
+            "APP_DEBUG": "true",
+            "APP_KEY": "base64:c26n7p7lFdoCgX3D8BKXkRQEI+V3IbwekVtnPUinym8=",
+            "DB_CONNECTION": "mysql",
+            "DB_HOST": "gateway01.us-east-1.prod.aws.tidbcloud.com",
+            "DB_PORT": "4000",
+            "DB_DATABASE": "db_monitor",
+            "DB_USERNAME": "w9U3UG9mZYYWhQk.root",
+            "DB_PASSWORD": "GTIHvrFGSr1lDr0U",
+            "QUEUE_CONNECTION": "sqs",
+            "SQS_QUEUE": {
+              "Ref": "jobsQueueCEDBAE3E"
+            },
+            "SQS_PREFIX": "",
+            "SESSION_DRIVER": "cookie",
+            "CACHE_DRIVER": "array",
+            "SESSION_DOMAIN": ".monitor.mrqn-labs.com",
+            "FRONTEND_URL": "https://monitor.mrqn-labs.com",
+            "SANCTUM_STATEFUL_DOMAINS": "monitor.mrqn-labs.com,api.monitor.mrqn-labs.com",
+            "MYSQL_ATTR_SSL_CA": "/etc/pki/tls/certs/ca-bundle.crt",
+            "GEMINI_API_KEY": "AIzaSyC2u-zZVf7b0aof4ptJf_Z1BT7xKxFujlU",
+            "BREF_RUNTIME": "Bref\\FunctionRuntime\\Main"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Layers": [
+          "arn:aws:lambda:us-east-1:873528684822:layer:php-82:19"
+        ]
+      },
+      "DependsOn": [
+        "JobsWorkerLogGroup"
+      ]
+    },
+    "ApiLambdaVersionY27pK2YDf8By3VTH4frWiaLaoJORYtc1adUmzv2gE": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "ApiLambdaFunction"
+        },
+        "CodeSha256": "b8eGw5nbnVHvLmqGlK/ylSGYgWM4Z92qz3o/77St0J8=",
+        "Description": "Laravel API Monitor"
+      }
+    },
+    "JobsWorkerLambdaVersionA4Vd1va37gu5v0dkmIuAvjS7qplvp3EohUKKa2Mxj4": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "JobsWorkerLambdaFunction"
+        },
+        "CodeSha256": "b8eGw5nbnVHvLmqGlK/ylSGYgWM4Z92qz3o/77St0J8="
+      }
+    },
+    "JobsWorkerEventSourceMappingSQSJobsQueueCEDBAE3E": {
+      "Type": "AWS::Lambda::EventSourceMapping",
+      "DependsOn": [
+        "IamRoleLambdaExecution"
+      ],
+      "Properties": {
+        "BatchSize": 1,
+        "MaximumBatchingWindowInSeconds": 0,
+        "EventSourceArn": {
+          "Fn::GetAtt": [
+            "jobsQueueCEDBAE3E",
+            "Arn"
+          ]
+        },
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "JobsWorkerLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Enabled": true,
+        "FunctionResponseTypes": [
+          "ReportBatchItemFailures"
+        ]
+      }
+    },
+    "HttpApi": {
+      "Type": "AWS::ApiGatewayV2::Api",
+      "Properties": {
+        "Name": "production-laravel-api-monitor",
+        "ProtocolType": "HTTP"
+      }
+    },
+    "HttpApiStage": {
+      "Type": "AWS::ApiGatewayV2::Stage",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "StageName": "$default",
+        "AutoDeploy": true,
+        "DefaultRouteSettings": {
+          "DetailedMetricsEnabled": false
+        }
+      }
+    },
+    "ApiLambdaPermissionHttpApi": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "ApiLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "HttpApi"
+              },
+              "/*"
+            ]
+          ]
+        }
+      }
+    },
+    "HttpApiIntegrationApi": {
+      "Type": "AWS::ApiGatewayV2::Integration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": {
+          "Fn::GetAtt": [
+            "ApiLambdaFunction",
+            "Arn"
+          ]
+        },
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      }
+    },
+    "HttpApiRouteDefault": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "RouteKey": "$default",
+        "Target": {
+          "Fn::Join": [
+            "/",
+            [
+              "integrations",
+              {
+                "Ref": "HttpApiIntegrationApi"
+              }
+            ]
+          ]
+        }
+      },
+      "DependsOn": "HttpApiIntegrationApi"
+    },
+    "jobsDlqD18CF374": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "MessageRetentionPeriod": 1209600,
+        "QueueName": "laravel-api-monitor-production-jobs-dlq"
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete"
+    },
+    "jobsQueueCEDBAE3E": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "QueueName": "laravel-api-monitor-production-jobs",
+        "RedrivePolicy": {
+          "deadLetterTargetArn": {
+            "Fn::GetAtt": [
+              "jobsDlqD18CF374",
+              "Arn"
+            ]
+          },
+          "maxReceiveCount": 3
+        },
+        "VisibilityTimeout": 360
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete"
+    }
+  },
+  "Outputs": {
+    "ServerlessDeploymentBucketName": {
+      "Value": "serverless-framework-deployments-us-east-1-7ae88e56-57f2",
+      "Export": {
+        "Name": "sls-laravel-api-monitor-production-ServerlessDeploymentBucketName"
+      }
+    },
+    "ApiLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "ApiLambdaVersionY27pK2YDf8By3VTH4frWiaLaoJORYtc1adUmzv2gE"
+      },
+      "Export": {
+        "Name": "sls-laravel-api-monitor-production-ApiLambdaFunctionQualifiedArn"
+      }
+    },
+    "JobsWorkerLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "JobsWorkerLambdaVersionA4Vd1va37gu5v0dkmIuAvjS7qplvp3EohUKKa2Mxj4"
+      },
+      "Export": {
+        "Name": "sls-laravel-api-monitor-production-JobsWorkerLambdaFunctionQualifiedArn"
+      }
+    },
+    "HttpApiId": {
+      "Description": "Id of the HTTP API",
+      "Value": {
+        "Ref": "HttpApi"
+      },
+      "Export": {
+        "Name": "sls-laravel-api-monitor-production-HttpApiId"
+      }
+    },
+    "HttpApiUrl": {
+      "Description": "URL of the HTTP API",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "HttpApi"
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region"
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix"
+            }
+          ]
+        ]
+      },
+      "Export": {
+        "Name": "sls-laravel-api-monitor-production-HttpApiUrl"
+      }
+    },
+    "jobsQueueArnA5A2FF7E": {
+      "Description": "ARN of the \"jobs\" SQS queue.",
+      "Value": {
+        "Fn::GetAtt": [
+          "jobsQueueCEDBAE3E",
+          "Arn"
+        ]
+      }
+    },
+    "jobsQueueUrl573F5B7A": {
+      "Description": "URL of the \"jobs\" SQS queue.",
+      "Value": {
+        "Ref": "jobsQueueCEDBAE3E"
+      }
+    },
+    "jobsDlqUrl2C7FA9D4": {
+      "Description": "URL of the \"jobs\" SQS dead letter queue.",
+      "Value": {
+        "Ref": "jobsDlqD18CF374"
+      }
+    }
+  }
+}

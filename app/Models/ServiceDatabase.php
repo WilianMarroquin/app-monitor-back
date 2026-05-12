@@ -37,6 +37,8 @@ use Illuminate\Support\Facades\Crypt;            // <-- 2. Importamos Crypt
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase whereUsername($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase withoutTrashed()
+ * @property string $name
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ServiceDatabase whereName($value)
  * @mixin \Eloquent
  */
 class ServiceDatabase extends Model
@@ -50,7 +52,7 @@ class ServiceDatabase extends Model
         'service_id',
         'db_type',
         'host_ip',
-        'port',
+        'name',
         'username',
         'password'
     ];

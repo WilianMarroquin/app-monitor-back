@@ -101,5 +101,4 @@ class Area extends Model
         );
     }
 
-
 }

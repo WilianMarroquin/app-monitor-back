@@ -56,6 +56,10 @@ class IncidentApiController extends AppbaseController implements HasMiddleware
                 'service_id',
                 'ping_id'
             ])
+            ->allowedIncludes([
+                'service',
+                'comentarios.user'
+            ])
             ->defaultSort('-id') // Ordenar por defecto por fecha descendente
             ->jsonPaginate(request('page.size') ?? 10);
 

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('service_webs', function (Blueprint $table) {
             $table->unsignedBigInteger('service_id')->index('fk_service_webs_services1_idx');
             $table->string('url', 350);
-            $table->unsignedBigInteger('server_id')->index('fk_service_webs_servers1_idx');
+
             $table->timestamps();
             $table->softDeletes();
 
