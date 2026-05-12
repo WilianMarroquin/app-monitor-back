@@ -28,6 +28,7 @@ provider:
     SESSION_DRIVER: cookie
     CACHE_DRIVER: array
     SESSION_DOMAIN: .monitor.mrqn-labs.com
+    SESSION_LIFETIME: 2
     FRONTEND_URL: https://monitor.mrqn-labs.com
     SANCTUM_STATEFUL_DOMAINS: monitor.mrqn-labs.com,api.monitor.mrqn-labs.com
     MYSQL_ATTR_SSL_CA: /etc/pki/tls/certs/ca-bundle.crt

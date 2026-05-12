@@ -120,10 +120,26 @@ class AnalyticsController extends Controller
 
         $topOffenders = $topOffendersQuery->with('service:id,name')->get();
 
+        $lastPingDate = DB::table('service_logs')->max('checked_at');
+
+        // Si existe fecha, calculamos si pasaron menos de 5 minutos
+        $isEngineActive = false;
+        $lastPingHuman = 'Sin registros';
+
+        if ($lastPingDate) {
+            $lastPingCarbon = Carbon::parse($lastPingDate);
+            $isEngineActive = $lastPingCarbon->diffInMinutes(now()) <= 5;
+            $lastPingHuman = $lastPingCarbon->diffForHumans(); // "hace 2 minutos"
+        }
+
         // 3. Empaquetamos y enviamos el Payload
         return response()->json([
             'success' => true,
             'data' => [
+                'engine_status' => [
+                    'is_active' => $isEngineActive,
+                    'last_ping_human' => $lastPingHuman
+                ],
                 'period' => [
                     'start' => $startDate->format('Y-m-d'),
                     'end'   => $endDate->format('Y-m-d'),
@@ -187,9 +203,25 @@ class AnalyticsController extends Controller
             ')
             ->first();
 
+        $lastPingDate = DB::table('service_logs')->max('checked_at');
+
+        // Si existe fecha, calculamos si pasaron menos de 5 minutos
+        $isEngineActive = false;
+        $lastPingHuman = 'Sin registros';
+
+        if ($lastPingDate) {
+            $lastPingCarbon = Carbon::parse($lastPingDate);
+            $isEngineActive = $lastPingCarbon->diffInMinutes(now()) <= 5;
+            $lastPingHuman = $lastPingCarbon->diffForHumans(); // "hace 2 minutos"
+        }
+
         return response()->json([
             'success' => true,
             'data' => [
+                'engine_status' => [
+                    'is_active' => $isEngineActive,
+                    'last_ping_human' => $lastPingHuman
+                ],
                 'heatmap' => $heatmapRaw,
                 'distribution_by_type' => $typeDistribution,
                 'duration_ranges' => [
@@ -215,9 +247,25 @@ class AnalyticsController extends Controller
         $downServicesCount = $activeIncidents->unique('service_id')->count();
         $upServicesCount = $totalServices - $downServicesCount;
 
+
+        $lastPingDate = DB::table('service_logs')->max('checked_at');
+
+        // Si existe fecha, calculamos si pasaron menos de 5 minutos
+        $isEngineActive = false;
+        $lastPingHuman = 'Sin registros';
+
+        if ($lastPingDate) {
+            $lastPingCarbon = Carbon::parse($lastPingDate);
+            $isEngineActive = $lastPingCarbon->diffInMinutes(now()) <= 5;
+            $lastPingHuman = $lastPingCarbon->diffForHumans(); // "hace 2 minutos"
+        }
         return response()->json([
             'success' => true,
             'data' => [
+                'engine_status' => [
+                    'is_active' => $isEngineActive,
+                    'last_ping_human' => $lastPingHuman
+                ],
                 'summary' => [
                     'total' => $totalServices,
                     'up' => $upServicesCount,
@@ -227,6 +275,7 @@ class AnalyticsController extends Controller
                 // Mandamos los incidentes activos para mostrarlos en tarjetas rojas
                 'active_alerts' => $activeIncidents->map(function($incident) {
                     return [
+
                         'id' => $incident->id,
                         'service_name' => $incident->service ? $incident->service->name : 'Desconocido',
                         'description' => $incident->description,
@@ -244,16 +293,10 @@ class AnalyticsController extends Controller
         // ==========================================
         // 📊 1. KPIs GLOBALES (Refactorizados)
         // ==========================================
-        // Total de servicios en el sistema (is_active = 1 significa que los estamos monitoreando)
         $registeredServices = Service::where('is_active', true)->count();
-
-        // Incidentes críticos (Caídos actualmente)
         $criticalIncidents = Incident::where('status', 'open')->count();
-
-        // Servicios Operativos Reales (El total menos los que están caídos)
         $operationalServices = $registeredServices - $criticalIncidents;
 
-        // Cálculo de Uptime Global
         $totalPeriodMinutes = $days * 24 * 60;
         $totalPossibleMinutes = $totalPeriodMinutes * ($registeredServices > 0 ? $registeredServices : 1);
 
@@ -267,7 +310,6 @@ class AnalyticsController extends Controller
             $uptimePercentage = (($totalPossibleMinutes - $totalDowntimeMinutes) / $totalPossibleMinutes) * 100;
         }
 
-        // Latencia Promedio (Requiere la tabla service_logs)
         $avgLatency = DB::table('service_logs')
             ->where('checked_at', '>=', $startDate)
             ->avg('response_time') ?? 0;
@@ -275,9 +317,8 @@ class AnalyticsController extends Controller
         // ==========================================
         // 🔥 2. ZONA CALIENTE (Incidentes Activos)
         // ==========================================
-        // Usamos Eager Loading para traer los datos del servicio y las áreas sin problema de N+1
-        $hotZoneRaw = Incident::with(['service.areas']) // Asumiendo que tienes la relación 'areas' en el modelo Service
-        ->where('status', 'open')
+        $hotZoneRaw = Incident::with(['service.areas'])
+            ->where('status', 'open')
             ->orderBy('opened_at', 'desc')
             ->get();
 
@@ -285,10 +326,8 @@ class AnalyticsController extends Controller
             return [
                 'id' => $incident->id,
                 'service_name' => $incident->service->name ?? 'Desconocido',
-                // Si tienes la tabla pivote services_has_areas mapeada:
                 'area' => $incident->service->areas->first()->name ?? 'General',
                 'type' => $incident->service->type ?? 'HTTP',
-                // diffForHumans formatea fechas a "hace 2 horas", "hace 5 minutos", etc.
                 'since' => Carbon::parse($incident->opened_at)->diffForHumans(),
                 'error' => $incident->description ?? 'Sin descripción de error',
             ];
@@ -302,21 +341,18 @@ class AnalyticsController extends Controller
                     'id' => $service->id,
                     'name' => $service->name,
                     'type' => $service->type,
-                    'status' => 'operational' // Si no está en hot_zone, asumimos que está al 100%
+                    'status' => 'operational'
                 ];
             });
 
         // ==========================================
         // 📡 3. TELEMETRÍA (Heatmap y Lentos)
         // ==========================================
-
-        // Heatmap: Días y Horas con más fallas
         $heatmap = Incident::where('opened_at', '>=', $startDate)
             ->selectRaw('DAYOFWEEK(opened_at) as day_of_week, HOUR(opened_at) as hour_of_day, COUNT(*) as total')
             ->groupBy(DB::raw('DAYOFWEEK(opened_at)'), DB::raw('HOUR(opened_at)'))
             ->get();
 
-        // Servicios más lentos (Top 5 bottlenecks)
         $slowestServices = DB::table('service_logs')
             ->join('services', 'service_logs.service_id', '=', 'services.id')
             ->where('service_logs.checked_at', '>=', $startDate)
@@ -328,19 +364,37 @@ class AnalyticsController extends Controller
             ->map(function ($item) {
                 return [
                     'name' => $item->name,
-                    // Redondeamos para que la gráfica de barras del front se vea limpia
                     'tiempo_espera' => round($item->tiempo_espera)
                 ];
             });
 
         // ==========================================
-        // 🚀 4. RESPUESTA AL FRONTEND
+        // ⏱️ 4. ENGINE HEARTBEAT (¿El Cron está vivo?)
+        // ==========================================
+        // Buscamos el último ping registrado en toda la base de datos
+        $lastPingDate = DB::table('service_logs')->max('checked_at');
+
+        // Si existe fecha, calculamos si pasaron menos de 5 minutos
+        $isEngineActive = false;
+        $lastPingHuman = 'Sin registros';
+
+        if ($lastPingDate) {
+            $lastPingCarbon = Carbon::parse($lastPingDate);
+            $isEngineActive = $lastPingCarbon->diffInMinutes(now()) <= 5;
+            $lastPingHuman = $lastPingCarbon->diffForHumans(); // "hace 2 minutos"
+        }
+
+        // ==========================================
+        // 🚀 5. RESPUESTA AL FRONTEND
         // ==========================================
         return response()->json([
             'success' => true,
             'data' => [
+                'engine_status' => [
+                    'is_active' => $isEngineActive,
+                    'last_ping_human' => $lastPingHuman
+                ],
                 'kpis' => [
-                    // Devolvemos los formatos exactos que Vue espera
                     'global_uptime' => round($uptimePercentage, 2) . '%',
                     'registered_services' => $registeredServices,
                     'operational_services' => $operationalServices > 0 ? $operationalServices : 0,

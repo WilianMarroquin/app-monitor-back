@@ -79,10 +79,10 @@ class MonitorApiController extends Controller
 
         if ($validated['result'] === 'FAILED') {
             $ping = ServiceLog::create([
-                'service_id'       => $validated['serviceId'],
-                'status'           => 'down',
+                'service_id'    => $validated['serviceId'],
+                'status'        => 'down',
                 'response_time' => $validated['responseTimeMs'],
-                'checked_at' => now(),
+                'checked_at'    => now(),
             ]);
 
             if (!$activeIncident) {
@@ -90,11 +90,25 @@ class MonitorApiController extends Controller
                     'service_id'  => $validated['serviceId'],
                     'ping_id'     => $ping->id,
                     'status'      => 'open',
-                    'description' => $validated['observations'],
+                    'description' => $validated['observations'] ?? 'Sin descripción',
                     'opened_at'   => $pingDate,
                 ]);
-            }
+            } else {
+                $newError = $validated['observations'] ?? 'Sin descripción';
+                $oldError = $activeIncident->description;
 
+                if ($newError !== $oldError) {
+                    $activeIncident->update([
+                        'description' => $newError,
+                    ]);
+
+                    $activeIncident->comentarios()->create([
+                        'description' => "TRANSICIÓN DE ERROR DETECTADA.\nError anterior: {$oldError}\nNuevo error: {$newError}",
+                        'created_at'  => $pingDate,
+                        'user_id'     => 3,
+                    ]);
+                }
+            }
         } elseif ($validated['result'] === 'SUCCESS') {
 
             ServiceLog::create([
