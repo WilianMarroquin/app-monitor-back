@@ -89,6 +89,7 @@ class IncidentApiController extends AppbaseController implements HasMiddleware
         $incident->load([
             'service',
             'comentarios.user',
+            'contactosNotificados',
         ]);
 
         return $this->sendResponse($incident->toArray(), 'Incident recuperado con éxito.');

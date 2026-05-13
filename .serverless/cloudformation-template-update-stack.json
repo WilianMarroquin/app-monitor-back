@@ -199,7 +199,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/laravel-api-monitor/production/1778603434567-2026-05-12T16:30:34.567Z/laravel-api-monitor.zip"
+          "S3Key": "serverless/laravel-api-monitor/production/1778626188488-2026-05-12T22:49:48.488Z/laravel-api-monitor.zip"
         },
         "Handler": "public/index.php",
         "Runtime": "provided.al2023",
@@ -224,8 +224,10 @@
               "Ref": "jobsQueueCEDBAE3E"
             },
             "SQS_PREFIX": "",
+            "LOG_CHANNEL": "stderr",
             "SESSION_DRIVER": "cookie",
             "CACHE_DRIVER": "array",
+            "SESSION_LIFETIME": "5",
             "SESSION_DOMAIN": ".monitor.mrqn-labs.com",
             "FRONTEND_URL": "https://monitor.mrqn-labs.com",
             "SANCTUM_STATEFUL_DOMAINS": "monitor.mrqn-labs.com,api.monitor.mrqn-labs.com",
@@ -256,7 +258,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/laravel-api-monitor/production/1778603434567-2026-05-12T16:30:34.567Z/laravel-api-monitor.zip"
+          "S3Key": "serverless/laravel-api-monitor/production/1778626188488-2026-05-12T22:49:48.488Z/laravel-api-monitor.zip"
         },
         "Handler": "Bref\\LaravelBridge\\Queue\\QueueHandler",
         "Runtime": "provided.al2023",
@@ -280,8 +282,10 @@
               "Ref": "jobsQueueCEDBAE3E"
             },
             "SQS_PREFIX": "",
+            "LOG_CHANNEL": "stderr",
             "SESSION_DRIVER": "cookie",
             "CACHE_DRIVER": "array",
+            "SESSION_LIFETIME": "5",
             "SESSION_DOMAIN": ".monitor.mrqn-labs.com",
             "FRONTEND_URL": "https://monitor.mrqn-labs.com",
             "SANCTUM_STATEFUL_DOMAINS": "monitor.mrqn-labs.com,api.monitor.mrqn-labs.com",
@@ -304,25 +308,25 @@
         "JobsWorkerLogGroup"
       ]
     },
-    "ApiLambdaVersionGhr6bL3rR54PlmK0Bvor1DyG74xTfT7VH7aaalWnJw": {
+    "ApiLambdaVersionuvxr8HC9SrUpKeSryGRw5iK2Sy6FTzAyN53kbjxCk": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ApiLambdaFunction"
         },
-        "CodeSha256": "mVl8mllXLcLm23HgGAtzpvV720/HyjH35s8rTTXIJ2Y=",
+        "CodeSha256": "UT3dkiN0SBgacqgPisxtlU11ZttCgO2iVKj7PLRfnxo=",
         "Description": "Laravel API Monitor"
       }
     },
-    "JobsWorkerLambdaVersion6F814At9jpbOxsPthyOyZhPDgm3KrKGHBuGstaOGxQs": {
+    "JobsWorkerLambdaVersion4VrIEUZSsgpzi1Cj9Z3BTlnDsMnjTX4WjnFdRpYejM": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "JobsWorkerLambdaFunction"
         },
-        "CodeSha256": "mVl8mllXLcLm23HgGAtzpvV720/HyjH35s8rTTXIJ2Y="
+        "CodeSha256": "UT3dkiN0SBgacqgPisxtlU11ZttCgO2iVKj7PLRfnxo="
       }
     },
     "JobsWorkerEventSourceMappingSQSJobsQueueCEDBAE3E": {
@@ -486,7 +490,7 @@
     "ApiLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ApiLambdaVersionGhr6bL3rR54PlmK0Bvor1DyG74xTfT7VH7aaalWnJw"
+        "Ref": "ApiLambdaVersionuvxr8HC9SrUpKeSryGRw5iK2Sy6FTzAyN53kbjxCk"
       },
       "Export": {
         "Name": "sls-laravel-api-monitor-production-ApiLambdaFunctionQualifiedArn"
@@ -495,7 +499,7 @@
     "JobsWorkerLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "JobsWorkerLambdaVersion6F814At9jpbOxsPthyOyZhPDgm3KrKGHBuGstaOGxQs"
+        "Ref": "JobsWorkerLambdaVersion4VrIEUZSsgpzi1Cj9Z3BTlnDsMnjTX4WjnFdRpYejM"
       },
       "Export": {
         "Name": "sls-laravel-api-monitor-production-JobsWorkerLambdaFunctionQualifiedArn"

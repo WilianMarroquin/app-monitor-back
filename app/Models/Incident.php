@@ -5,12 +5,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $description
@@ -126,6 +127,17 @@ class Incident extends Model
     public function comentarios(): HasMany
     {
         return $this->hasMany(IncidentComment::class, 'incident_id', 'id')->orderBy('created_at', 'desc');
+
+    }
+
+    public function contactosNotificados(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            NotificationContact::class,
+            'incident_has_notificacion',
+            'incident_id',
+            'notification_contact_id')
+            ->withPivot('status', 'number');
 
     }
 

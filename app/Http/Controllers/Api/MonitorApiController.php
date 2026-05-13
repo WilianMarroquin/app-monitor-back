@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Incident;
+use App\Models\NotificationContact;
 use App\Models\Service;
 use App\Models\ServiceLog;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class MonitorApiController extends Controller
 {
@@ -44,7 +47,7 @@ class MonitorApiController extends Controller
                             'name' => $service->entorno
                         ]
                     ] : null,
-                    'contactos' => $service->contactos,
+                    'userNotication' => $service->contactos,
                     'lastTestAt' => $service->updated_at
                         ? (is_numeric($service->updated_at)
                             ? Carbon::createFromTimestamp($service->updated_at)->utc()->toISOString()
@@ -68,7 +71,8 @@ class MonitorApiController extends Controller
             'date'           => 'required|date',
             'result'         => 'required|string|in:SUCCESS,FAILED',
             'responseTimeMs' => 'nullable|integer',
-            'observations'   => 'nullable|string'
+            'observations'   => 'nullable|string',
+            'userNotication' => 'nullable|array',
         ]);
 
         $pingDate = Carbon::parse($validated['date'], 'UTC')->setTimezone(config('app.timezone'));
@@ -86,7 +90,8 @@ class MonitorApiController extends Controller
             ]);
 
             if (!$activeIncident) {
-                Incident::create([
+                // Reasignamos la variable para asegurar que el objeto exista y pasarlo al helper
+                $activeIncident = Incident::create([
                     'service_id'  => $validated['serviceId'],
                     'ping_id'     => $ping->id,
                     'status'      => 'open',
@@ -98,9 +103,7 @@ class MonitorApiController extends Controller
                 $oldError = $activeIncident->description;
 
                 if ($newError !== $oldError) {
-                    $activeIncident->update([
-                        'description' => $newError,
-                    ]);
+                    $activeIncident->update(['description' => $newError]);
 
                     $activeIncident->comentarios()->create([
                         'description' => "TRANSICIÓN DE ERROR DETECTADA.\nError anterior: {$oldError}\nNuevo error: {$newError}",
@@ -109,16 +112,24 @@ class MonitorApiController extends Controller
                     ]);
                 }
             }
+
+            // Ejecutamos las notificaciones asegurando que $activeIncident ya existe
+            $notifications = $request->input('userNotication', []);
+            if (!empty($notifications)) {
+                $this->attachNotifications($activeIncident, $notifications);
+            }
+
         } elseif ($validated['result'] === 'SUCCESS') {
 
             ServiceLog::create([
-                'service_id'       => $validated['serviceId'],
-                'status'           => 'up',
+                'service_id'    => $validated['serviceId'],
+                'status'        => 'up',
                 'response_time' => $validated['responseTimeMs'],
-                'checked_at' => now(),
+                'checked_at'    => now(),
             ]);
 
-            if($activeIncident) {
+            // Solo evaluamos y notificamos si realmente había un incidente abierto que cerrar
+            if ($activeIncident) {
                 $activeIncident->update([
                     'status'      => 'resolved',
                     'resolved_at' => $pingDate,
@@ -127,8 +138,13 @@ class MonitorApiController extends Controller
                 $activeIncident->comentarios()->create([
                     'description' => "RESOLUCIÓN AUTOMÁTICA. Tiempo de respuesta: {$validated['responseTimeMs']}ms.",
                     'created_at'  => $pingDate,
-                    'user_id'  => User::find(3)->id,
+                    'user_id'     => 3,
                 ]);
+
+                $notifications = $request->input('userNotication', []);
+                if (!empty($notifications)) {
+                    $this->attachNotifications($activeIncident, $notifications);
+                }
             }
         }
 
@@ -136,5 +152,46 @@ class MonitorApiController extends Controller
             'success' => true,
             'message' => 'Telemetry received successfully'
         ], 200);
+    }
+
+    /**
+     * Helper para procesar las notificaciones de WhatsApp e insertarlas en la tabla pivote
+     */
+    private function attachNotifications(Incident $incident, array $notifications)
+    {
+        if (empty($notifications)) return;
+
+        $insertData = [];
+
+        foreach ($notifications as $notif) {
+            Log::log('info', 'Procesando notificación', ['notification' => $notif]);
+            $isUpEvent = filter_var($notif['EventType'] ?? false, FILTER_VALIDATE_BOOLEAN);
+            $status = $isUpEvent ? 'resolved' : 'open';
+
+            if (isset($notif['Success']) && $notif['Success'] === true) {
+
+                $contactId = $notif['Id'] ?? null;
+                if (!$contactId && isset($notif['Number'])) {
+                    $contact = NotificationContact::firstOrCreate(
+                        ['telefono' => $notif['Number']],
+                        ['nombres'  => $notif['Name'] ?? 'Desconocido']
+                    );
+                    $contactId = $contact->id;
+                }
+
+                if ($contactId) {
+                    $insertData[] = [
+                        'incident_id'             => $incident->id,
+                        'notification_contact_id' => $contactId,
+                        'status'                  => $status,
+                        'number'                  => $notif['Number'],
+                    ];
+                }
+            }
+        }
+
+        if (!empty($insertData)) {
+            DB::table('incident_has_notificacion')->insertOrIgnore($insertData);
+        }
     }
 }
