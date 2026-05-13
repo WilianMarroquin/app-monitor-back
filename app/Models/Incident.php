@@ -108,6 +108,9 @@ class Incident extends Model
 
     ];
 
+    protected $appends = [
+        'description_corta'
+    ];
 
     /**
      * Accessor for relationships
@@ -139,6 +142,54 @@ class Incident extends Model
             'notification_contact_id')
             ->withPivot('status', 'number');
 
+    }
+
+    public function getDescriptionCortaAttribute(): string|null
+    {
+        return strlen($this->description) > 80 ? substr($this->description, 0, 80) . '...' : $this->description;
+
+    }
+
+    /**
+     * Scope para filtrar por rango de fechas exacto (YYYY-MM-DD-YYYY-MM-DD)
+     */
+    public function scopeRangoFechas($query, $rangoFechas)
+    {
+        if (empty($rangoFechas)) {
+            return $query;
+        }
+
+        $startDate = null;
+        $endDate = null;
+
+        // 🧮 STRING PARSING: Extraemos las fechas basándonos en la longitud exacta
+        if (strlen($rangoFechas) === 21) {
+            // Rango completo: "2026-05-11-2026-05-15"
+            $startDate = substr($rangoFechas, 0, 10);
+            $endDate = substr($rangoFechas, 11, 10);
+        } elseif (strlen($rangoFechas) === 11) {
+            // Rango parcial
+            if (str_starts_with($rangoFechas, '-')) {
+                // Solo fecha fin: "-2026-05-15"
+                $endDate = substr($rangoFechas, 1, 10);
+            } else {
+                // Solo fecha inicio: "2026-05-11-"
+                $startDate = substr($rangoFechas, 0, 10);
+            }
+        }
+
+        // 🛡️ BOUNDARY INCLUSION: Aplicamos los filtros a la base de datos
+        if ($startDate) {
+            // ->startOfDay() asegura que busque desde las 00:00:00
+            $query->where('opened_at', '>=', \Carbon\Carbon::parse($startDate)->startOfDay());
+        }
+
+        if ($endDate) {
+            // ->endOfDay() asegura que busque hasta las 23:59:59
+            $query->where('opened_at', '<=', \Carbon\Carbon::parse($endDate)->endOfDay());
+        }
+
+        return $query;
     }
 
 }

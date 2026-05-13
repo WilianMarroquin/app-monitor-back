@@ -16,11 +16,11 @@
         "APP_DEBUG": "true",
         "APP_KEY": "base64:c26n7p7lFdoCgX3D8BKXkRQEI+V3IbwekVtnPUinym8=",
         "DB_CONNECTION": "mysql",
-        "DB_HOST": "gateway01.us-east-1.prod.aws.tidbcloud.com",
-        "DB_PORT": "4000",
+        "DB_HOST": "svrmonitoralertas.mysql.database.azure.com",
+        "DB_PORT": "3306",
         "DB_DATABASE": "db_monitor",
-        "DB_USERNAME": "w9U3UG9mZYYWhQk.root",
-        "DB_PASSWORD": "GTIHvrFGSr1lDr0U",
+        "DB_USERNAME": "usrmonitoralertas",
+        "DB_PASSWORD": "Guast@ingenieria!",
         "QUEUE_CONNECTION": "sqs",
         "SQS_QUEUE": {
           "Ref": "jobsQueueCEDBAE3E"
@@ -29,7 +29,7 @@
         "LOG_CHANNEL": "stderr",
         "SESSION_DRIVER": "cookie",
         "CACHE_DRIVER": "array",
-        "SESSION_LIFETIME": "15",
+        "SESSION_LIFETIME": "10",
         "SESSION_DOMAIN": ".monitor.mrqn-labs.com",
         "FRONTEND_URL": "https://monitor.mrqn-labs.com",
         "SANCTUM_STATEFUL_DOMAINS": "monitor.mrqn-labs.com,api.monitor.mrqn-labs.com",
@@ -244,7 +244,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/laravel-api-monitor/production/1778704390114-2026-05-13T20:33:10.114Z/laravel-api-monitor.zip"
+                "S3Key": "serverless/laravel-api-monitor/production/1778710033936-2026-05-13T22:07:13.936Z/laravel-api-monitor.zip"
               },
               "Handler": "public/index.php",
               "Runtime": "provided.al2023",
@@ -259,11 +259,11 @@
                   "APP_DEBUG": "true",
                   "APP_KEY": "base64:c26n7p7lFdoCgX3D8BKXkRQEI+V3IbwekVtnPUinym8=",
                   "DB_CONNECTION": "mysql",
-                  "DB_HOST": "gateway01.us-east-1.prod.aws.tidbcloud.com",
-                  "DB_PORT": "4000",
+                  "DB_HOST": "svrmonitoralertas.mysql.database.azure.com",
+                  "DB_PORT": "3306",
                   "DB_DATABASE": "db_monitor",
-                  "DB_USERNAME": "w9U3UG9mZYYWhQk.root",
-                  "DB_PASSWORD": "GTIHvrFGSr1lDr0U",
+                  "DB_USERNAME": "usrmonitoralertas",
+                  "DB_PASSWORD": "Guast@ingenieria!",
                   "QUEUE_CONNECTION": "sqs",
                   "SQS_QUEUE": {
                     "$ref": "$[\"service\"][\"provider\"][\"environment\"][\"SQS_QUEUE\"]"
@@ -272,7 +272,7 @@
                   "LOG_CHANNEL": "stderr",
                   "SESSION_DRIVER": "cookie",
                   "CACHE_DRIVER": "array",
-                  "SESSION_LIFETIME": "15",
+                  "SESSION_LIFETIME": "10",
                   "SESSION_DOMAIN": ".monitor.mrqn-labs.com",
                   "FRONTEND_URL": "https://monitor.mrqn-labs.com",
                   "SANCTUM_STATEFUL_DOMAINS": "monitor.mrqn-labs.com,api.monitor.mrqn-labs.com",
@@ -303,7 +303,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/laravel-api-monitor/production/1778704390114-2026-05-13T20:33:10.114Z/laravel-api-monitor.zip"
+                "S3Key": "serverless/laravel-api-monitor/production/1778710033936-2026-05-13T22:07:13.936Z/laravel-api-monitor.zip"
               },
               "Handler": "Bref\\LaravelBridge\\Queue\\QueueHandler",
               "Runtime": "provided.al2023",
@@ -317,11 +317,11 @@
                   "APP_DEBUG": "true",
                   "APP_KEY": "base64:c26n7p7lFdoCgX3D8BKXkRQEI+V3IbwekVtnPUinym8=",
                   "DB_CONNECTION": "mysql",
-                  "DB_HOST": "gateway01.us-east-1.prod.aws.tidbcloud.com",
-                  "DB_PORT": "4000",
+                  "DB_HOST": "svrmonitoralertas.mysql.database.azure.com",
+                  "DB_PORT": "3306",
                   "DB_DATABASE": "db_monitor",
-                  "DB_USERNAME": "w9U3UG9mZYYWhQk.root",
-                  "DB_PASSWORD": "GTIHvrFGSr1lDr0U",
+                  "DB_USERNAME": "usrmonitoralertas",
+                  "DB_PASSWORD": "Guast@ingenieria!",
                   "QUEUE_CONNECTION": "sqs",
                   "SQS_QUEUE": {
                     "$ref": "$[\"service\"][\"provider\"][\"environment\"][\"SQS_QUEUE\"]"
@@ -330,7 +330,7 @@
                   "LOG_CHANNEL": "stderr",
                   "SESSION_DRIVER": "cookie",
                   "CACHE_DRIVER": "array",
-                  "SESSION_LIFETIME": "15",
+                  "SESSION_LIFETIME": "10",
                   "SESSION_DOMAIN": ".monitor.mrqn-labs.com",
                   "FRONTEND_URL": "https://monitor.mrqn-labs.com",
                   "SANCTUM_STATEFUL_DOMAINS": "monitor.mrqn-labs.com,api.monitor.mrqn-labs.com",
@@ -353,25 +353,25 @@
               "JobsWorkerLogGroup"
             ]
           },
-          "ApiLambdaVersionHxitbd2tofeQZRIBZHjjhORqRNDygH84ifA4t1VA0": {
+          "ApiLambdaVersionlho9iUEUFDY1xPofvtt8HXENcOGtoB2VkwMRf2k5A": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ApiLambdaFunction"
               },
-              "CodeSha256": "d+bOclniQI7Bb/dCBC0VEj1dyskaRiIINTQ66t9mk7g=",
+              "CodeSha256": "giDM44bJj7cv5DJt+xhJob5PO1R+aY119NUF8rvfeBI=",
               "Description": "Laravel API Monitor"
             }
           },
-          "JobsWorkerLambdaVersioncW6gvGcEB1XnyNUgjzgqKedNRTrmlVd8SN9YAMvEE": {
+          "JobsWorkerLambdaVersionEzGlKc87v1BkR0qjD9JVpoRJboQJJB1p9iYABbx1Xxs": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "JobsWorkerLambdaFunction"
               },
-              "CodeSha256": "d+bOclniQI7Bb/dCBC0VEj1dyskaRiIINTQ66t9mk7g="
+              "CodeSha256": "giDM44bJj7cv5DJt+xhJob5PO1R+aY119NUF8rvfeBI="
             }
           },
           "JobsWorkerEventSourceMappingSQSJobsQueueCEDBAE3E": {
@@ -532,7 +532,7 @@
           "ApiLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ApiLambdaVersionHxitbd2tofeQZRIBZHjjhORqRNDygH84ifA4t1VA0"
+              "Ref": "ApiLambdaVersionlho9iUEUFDY1xPofvtt8HXENcOGtoB2VkwMRf2k5A"
             },
             "Export": {
               "Name": "sls-laravel-api-monitor-production-ApiLambdaFunctionQualifiedArn"
@@ -541,7 +541,7 @@
           "JobsWorkerLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "JobsWorkerLambdaVersioncW6gvGcEB1XnyNUgjzgqKedNRTrmlVd8SN9YAMvEE"
+              "Ref": "JobsWorkerLambdaVersionEzGlKc87v1BkR0qjD9JVpoRJboQJJB1p9iYABbx1Xxs"
             },
             "Export": {
               "Name": "sls-laravel-api-monitor-production-JobsWorkerLambdaFunctionQualifiedArn"
@@ -728,7 +728,7 @@
         "package": {},
         "memory": 1024,
         "vpc": {},
-        "versionLogicalId": "ApiLambdaVersionHxitbd2tofeQZRIBZHjjhORqRNDygH84ifA4t1VA0"
+        "versionLogicalId": "ApiLambdaVersionlho9iUEUFDY1xPofvtt8HXENcOGtoB2VkwMRf2k5A"
       },
       "jobsWorker": {
         "handler": "Bref\\LaravelBridge\\Queue\\QueueHandler",
@@ -756,7 +756,7 @@
         "package": {},
         "memory": 1024,
         "vpc": {},
-        "versionLogicalId": "JobsWorkerLambdaVersioncW6gvGcEB1XnyNUgjzgqKedNRTrmlVd8SN9YAMvEE"
+        "versionLogicalId": "JobsWorkerLambdaVersionEzGlKc87v1BkR0qjD9JVpoRJboQJJB1p9iYABbx1Xxs"
       }
     },
     "resources": {
@@ -829,18 +829,18 @@
           "APP_DEBUG": "true",
           "APP_KEY": "base64:c26n7p7lFdoCgX3D8BKXkRQEI+V3IbwekVtnPUinym8=",
           "DB_CONNECTION": "mysql",
-          "DB_HOST": "gateway01.us-east-1.prod.aws.tidbcloud.com",
-          "DB_PORT": "4000",
+          "DB_HOST": "svrmonitoralertas.mysql.database.azure.com",
+          "DB_PORT": "3306",
           "DB_DATABASE": "db_monitor",
-          "DB_USERNAME": "w9U3UG9mZYYWhQk.root",
-          "DB_PASSWORD": "GTIHvrFGSr1lDr0U",
+          "DB_USERNAME": "usrmonitoralertas",
+          "DB_PASSWORD": "Guast@ingenieria!",
           "QUEUE_CONNECTION": "sqs",
           "SQS_QUEUE": "${Token[TOKEN.14]}",
           "SQS_PREFIX": "",
           "LOG_CHANNEL": "stderr",
           "SESSION_DRIVER": "cookie",
           "CACHE_DRIVER": "array",
-          "SESSION_LIFETIME": "15",
+          "SESSION_LIFETIME": "10",
           "SESSION_DOMAIN": ".monitor.mrqn-labs.com",
           "FRONTEND_URL": "https://monitor.mrqn-labs.com",
           "SANCTUM_STATEFUL_DOMAINS": "monitor.mrqn-labs.com,api.monitor.mrqn-labs.com",
@@ -952,7 +952,7 @@
     "artifact": "C:\\laragon\\www\\monitoreo-back\\.serverless\\laravel-api-monitor.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/laravel-api-monitor/production/1778704390114-2026-05-13T20:33:10.114Z",
+    "artifactDirectoryName": "serverless/laravel-api-monitor/production/1778710033936-2026-05-13T22:07:13.936Z",
     "artifact": "laravel-api-monitor.zip"
   }
 }

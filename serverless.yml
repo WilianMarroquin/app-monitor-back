@@ -15,7 +15,7 @@ provider:
     # Base de datos
     DB_CONNECTION: mysql
     DB_HOST: ${ssm:/monitor/DB_HOST}
-    DB_PORT: 4000
+    DB_PORT: 3306
     DB_DATABASE: ${ssm:/monitor/DB_DATABASE}
     DB_USERNAME: ${ssm:/monitor/DB_USERNAME}
     DB_PASSWORD: ${ssm:/monitor/DB_PASSWORD}
@@ -28,7 +28,7 @@ provider:
     LOG_CHANNEL: stderr
     SESSION_DRIVER: cookie
     CACHE_DRIVER: array
-    SESSION_LIFETIME: 15
+    SESSION_LIFETIME: 10
     SESSION_DOMAIN: .monitor.mrqn-labs.com
     FRONTEND_URL: https://monitor.mrqn-labs.com
     SANCTUM_STATEFUL_DOMAINS: monitor.mrqn-labs.com,api.monitor.mrqn-labs.com
