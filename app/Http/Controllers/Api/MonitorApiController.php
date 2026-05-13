@@ -47,7 +47,7 @@ class MonitorApiController extends Controller
                             'name' => $service->entorno
                         ]
                     ] : null,
-                    'userNotication' => $service->contactos,
+                    'userNotification' => $service->contactos,
                     'lastTestAt' => $service->updated_at
                         ? (is_numeric($service->updated_at)
                             ? Carbon::createFromTimestamp($service->updated_at)->utc()->toISOString()
@@ -72,7 +72,7 @@ class MonitorApiController extends Controller
             'result'         => 'required|string|in:SUCCESS,FAILED',
             'responseTimeMs' => 'nullable|integer',
             'observations'   => 'nullable|string',
-            'userNotication' => 'nullable|array',
+            'userNotification' => 'nullable|array',
         ]);
 
         $pingDate = Carbon::parse($validated['date'], 'UTC')->setTimezone(config('app.timezone'));
@@ -98,6 +98,12 @@ class MonitorApiController extends Controller
                     'description' => $validated['observations'] ?? 'Sin descripción',
                     'opened_at'   => $pingDate,
                 ]);
+
+                $activeIncident->comentarios()->create([
+                    'description' => "INCIDENTE DETECTADO AUTOMÁTICAMENTE. Tiempo de respuesta: {$validated['responseTimeMs']}ms.",
+                    'created_at'  => $pingDate,
+                    'user_id'     => 3,
+                ]);
             } else {
                 $newError = $validated['observations'] ?? 'Sin descripción';
                 $oldError = $activeIncident->description;
@@ -114,7 +120,7 @@ class MonitorApiController extends Controller
             }
 
             // Ejecutamos las notificaciones asegurando que $activeIncident ya existe
-            $notifications = $request->input('userNotication', []);
+            $notifications = $request->input('userNotification', []);
             if (!empty($notifications)) {
                 $this->attachNotifications($activeIncident, $notifications);
             }
@@ -141,7 +147,7 @@ class MonitorApiController extends Controller
                     'user_id'     => 3,
                 ]);
 
-                $notifications = $request->input('userNotication', []);
+                $notifications = $request->input('userNotification', []);
                 if (!empty($notifications)) {
                     $this->attachNotifications($activeIncident, $notifications);
                 }
@@ -162,29 +168,41 @@ class MonitorApiController extends Controller
         if (empty($notifications)) return;
 
         $insertData = [];
+        $nombresDeUsers = [];
 
         foreach ($notifications as $notif) {
-            Log::log('info', 'Procesando notificación', ['notification' => $notif]);
             $isUpEvent = filter_var($notif['EventType'] ?? false, FILTER_VALIDATE_BOOLEAN);
             $status = $isUpEvent ? 'resolved' : 'open';
 
             if (isset($notif['Success']) && $notif['Success'] === true) {
 
                 $contactId = $notif['Id'] ?? null;
+
+                $contactName = $notif['Name'] ?? $notif['Number'] ?? 'Desconocido';
+
                 if (!$contactId && isset($notif['Number'])) {
                     $contact = NotificationContact::firstOrCreate(
                         ['telefono' => $notif['Number']],
                         ['nombres'  => $notif['Name'] ?? 'Desconocido']
                     );
                     $contactId = $contact->id;
+
+                    $contactName = $contact->nombre_completo ?? $contact->nombres;
+                } elseif ($contactId) {
+                    $contact = NotificationContact::find($contactId);
+                    if ($contact) {
+                        $contactName = $contact->nombre_completo ?? $contact->nombres;
+                    }
                 }
 
                 if ($contactId) {
+                    $nombresDeUsers[] = $contactName;
+
                     $insertData[] = [
                         'incident_id'             => $incident->id,
                         'notification_contact_id' => $contactId,
                         'status'                  => $status,
-                        'number'                  => $notif['Number'],
+                        'number'                  => $notif['Number'] ?? null,
                     ];
                 }
             }
@@ -192,6 +210,14 @@ class MonitorApiController extends Controller
 
         if (!empty($insertData)) {
             DB::table('incident_has_notificacion')->insertOrIgnore($insertData);
+
+            $nombresUnicos = array_unique($nombresDeUsers);
+
+            $incident->comentarios()->create([
+                'description' => "Se despacharon alertas automáticas vía WhatsApp a los siguientes contactos: " . implode(', ', $nombresUnicos) . ".",
+                'created_at'  => now(),
+                'user_id'     => 3,
+            ]);
         }
     }
 }
