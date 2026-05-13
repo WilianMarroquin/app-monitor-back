@@ -29,7 +29,7 @@
         "LOG_CHANNEL": "stderr",
         "SESSION_DRIVER": "cookie",
         "CACHE_DRIVER": "array",
-        "SESSION_LIFETIME": "5",
+        "SESSION_LIFETIME": "15",
         "SESSION_DOMAIN": ".monitor.mrqn-labs.com",
         "FRONTEND_URL": "https://monitor.mrqn-labs.com",
         "SANCTUM_STATEFUL_DOMAINS": "monitor.mrqn-labs.com,api.monitor.mrqn-labs.com",
@@ -244,7 +244,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/laravel-api-monitor/production/1778626188488-2026-05-12T22:49:48.488Z/laravel-api-monitor.zip"
+                "S3Key": "serverless/laravel-api-monitor/production/1778704390114-2026-05-13T20:33:10.114Z/laravel-api-monitor.zip"
               },
               "Handler": "public/index.php",
               "Runtime": "provided.al2023",
@@ -272,7 +272,7 @@
                   "LOG_CHANNEL": "stderr",
                   "SESSION_DRIVER": "cookie",
                   "CACHE_DRIVER": "array",
-                  "SESSION_LIFETIME": "5",
+                  "SESSION_LIFETIME": "15",
                   "SESSION_DOMAIN": ".monitor.mrqn-labs.com",
                   "FRONTEND_URL": "https://monitor.mrqn-labs.com",
                   "SANCTUM_STATEFUL_DOMAINS": "monitor.mrqn-labs.com,api.monitor.mrqn-labs.com",
@@ -303,7 +303,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/laravel-api-monitor/production/1778626188488-2026-05-12T22:49:48.488Z/laravel-api-monitor.zip"
+                "S3Key": "serverless/laravel-api-monitor/production/1778704390114-2026-05-13T20:33:10.114Z/laravel-api-monitor.zip"
               },
               "Handler": "Bref\\LaravelBridge\\Queue\\QueueHandler",
               "Runtime": "provided.al2023",
@@ -330,7 +330,7 @@
                   "LOG_CHANNEL": "stderr",
                   "SESSION_DRIVER": "cookie",
                   "CACHE_DRIVER": "array",
-                  "SESSION_LIFETIME": "5",
+                  "SESSION_LIFETIME": "15",
                   "SESSION_DOMAIN": ".monitor.mrqn-labs.com",
                   "FRONTEND_URL": "https://monitor.mrqn-labs.com",
                   "SANCTUM_STATEFUL_DOMAINS": "monitor.mrqn-labs.com,api.monitor.mrqn-labs.com",
@@ -353,25 +353,25 @@
               "JobsWorkerLogGroup"
             ]
           },
-          "ApiLambdaVersionuvxr8HC9SrUpKeSryGRw5iK2Sy6FTzAyN53kbjxCk": {
+          "ApiLambdaVersionHxitbd2tofeQZRIBZHjjhORqRNDygH84ifA4t1VA0": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ApiLambdaFunction"
               },
-              "CodeSha256": "UT3dkiN0SBgacqgPisxtlU11ZttCgO2iVKj7PLRfnxo=",
+              "CodeSha256": "d+bOclniQI7Bb/dCBC0VEj1dyskaRiIINTQ66t9mk7g=",
               "Description": "Laravel API Monitor"
             }
           },
-          "JobsWorkerLambdaVersion4VrIEUZSsgpzi1Cj9Z3BTlnDsMnjTX4WjnFdRpYejM": {
+          "JobsWorkerLambdaVersioncW6gvGcEB1XnyNUgjzgqKedNRTrmlVd8SN9YAMvEE": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "JobsWorkerLambdaFunction"
               },
-              "CodeSha256": "UT3dkiN0SBgacqgPisxtlU11ZttCgO2iVKj7PLRfnxo="
+              "CodeSha256": "d+bOclniQI7Bb/dCBC0VEj1dyskaRiIINTQ66t9mk7g="
             }
           },
           "JobsWorkerEventSourceMappingSQSJobsQueueCEDBAE3E": {
@@ -532,7 +532,7 @@
           "ApiLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ApiLambdaVersionuvxr8HC9SrUpKeSryGRw5iK2Sy6FTzAyN53kbjxCk"
+              "Ref": "ApiLambdaVersionHxitbd2tofeQZRIBZHjjhORqRNDygH84ifA4t1VA0"
             },
             "Export": {
               "Name": "sls-laravel-api-monitor-production-ApiLambdaFunctionQualifiedArn"
@@ -541,7 +541,7 @@
           "JobsWorkerLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "JobsWorkerLambdaVersion4VrIEUZSsgpzi1Cj9Z3BTlnDsMnjTX4WjnFdRpYejM"
+              "Ref": "JobsWorkerLambdaVersioncW6gvGcEB1XnyNUgjzgqKedNRTrmlVd8SN9YAMvEE"
             },
             "Export": {
               "Name": "sls-laravel-api-monitor-production-JobsWorkerLambdaFunctionQualifiedArn"
@@ -728,7 +728,7 @@
         "package": {},
         "memory": 1024,
         "vpc": {},
-        "versionLogicalId": "ApiLambdaVersionuvxr8HC9SrUpKeSryGRw5iK2Sy6FTzAyN53kbjxCk"
+        "versionLogicalId": "ApiLambdaVersionHxitbd2tofeQZRIBZHjjhORqRNDygH84ifA4t1VA0"
       },
       "jobsWorker": {
         "handler": "Bref\\LaravelBridge\\Queue\\QueueHandler",
@@ -756,7 +756,7 @@
         "package": {},
         "memory": 1024,
         "vpc": {},
-        "versionLogicalId": "JobsWorkerLambdaVersion4VrIEUZSsgpzi1Cj9Z3BTlnDsMnjTX4WjnFdRpYejM"
+        "versionLogicalId": "JobsWorkerLambdaVersioncW6gvGcEB1XnyNUgjzgqKedNRTrmlVd8SN9YAMvEE"
       }
     },
     "resources": {
@@ -840,7 +840,7 @@
           "LOG_CHANNEL": "stderr",
           "SESSION_DRIVER": "cookie",
           "CACHE_DRIVER": "array",
-          "SESSION_LIFETIME": "5",
+          "SESSION_LIFETIME": "15",
           "SESSION_DOMAIN": ".monitor.mrqn-labs.com",
           "FRONTEND_URL": "https://monitor.mrqn-labs.com",
           "SANCTUM_STATEFUL_DOMAINS": "monitor.mrqn-labs.com,api.monitor.mrqn-labs.com",
@@ -952,7 +952,7 @@
     "artifact": "C:\\laragon\\www\\monitoreo-back\\.serverless\\laravel-api-monitor.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/laravel-api-monitor/production/1778626188488-2026-05-12T22:49:48.488Z",
+    "artifactDirectoryName": "serverless/laravel-api-monitor/production/1778704390114-2026-05-13T20:33:10.114Z",
     "artifact": "laravel-api-monitor.zip"
   }
 }

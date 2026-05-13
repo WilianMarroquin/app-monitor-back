@@ -14,31 +14,31 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::firstOrCreate(
-            ['email' => 'admin@gmail.com'],
-            [
-                'primer_nombre' => 'Admin',
-                'segundo_nombre' => '',
-                'primer_apellido' => 'Admin',
-                'segundo_apellido' => '',
-                'usuario' => 'Admin',
-                'estado_id' => UserEstado::ACTIVO,
-                'password' => bcrypt('12345'),
-            ]
-        );
-
-        User::firstOrCreate(
-            ['email' => 'operador@gmail.com'],
-            [
-                'primer_nombre' => 'Operador',
-                'segundo_nombre' => '',
-                'primer_apellido' => 'NOC',
-                'segundo_apellido' => '',
-                'usuario' => 'operador_noc',
-                'estado_id' => UserEstado::ACTIVO,
-                'password' => bcrypt('12345'),
-            ]
-        );
+//        User::firstOrCreate(
+//            ['email' => 'admin@gmail.com'],
+//            [
+//                'primer_nombre' => 'Admin',
+//                'segundo_nombre' => '',
+//                'primer_apellido' => 'Admin',
+//                'segundo_apellido' => '',
+//                'usuario' => 'Admin',
+//                'estado_id' => UserEstado::ACTIVO,
+//                'password' => bcrypt('12345'),
+//            ]
+//        );
+//
+//        User::firstOrCreate(
+//            ['email' => 'operador@gmail.com'],
+//            [
+//                'primer_nombre' => 'Operador',
+//                'segundo_nombre' => '',
+//                'primer_apellido' => 'NOC',
+//                'segundo_apellido' => '',
+//                'usuario' => 'operador_noc',
+//                'estado_id' => UserEstado::ACTIVO,
+//                'password' => bcrypt('12345'),
+//            ]
+//        );
 
         $monitorUser = User::firstOrCreate(
             ['email' => 'monitor@sistema.local'],

@@ -27,7 +27,11 @@ class PruebasCommand extends Command
     public function handle()
     {
 
-        $user = User::find(1);
+        $user = User::find(3);
+
+        $token = $user->createToken('Monitor-CSharp-Key', ['monitor:access']);
+
+        dd($token->plainTextToken);
 
         dd($user->toArray());
 

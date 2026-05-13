@@ -60,7 +60,6 @@ class MonitorApiController extends Controller
         // para respetar exactamente el formato que pediste.
         return response()->json([
             'services' => $services,
-            'keyId'    => 2 // Aquí puedes poner una variable de entorno env('MONITOR_KEY_ID', 2) si lo deseas
         ]);
     }
 
@@ -211,10 +210,18 @@ class MonitorApiController extends Controller
         if (!empty($insertData)) {
             DB::table('incident_has_notificacion')->insertOrIgnore($insertData);
 
+            $status = $insertData[0]['status'] ?? 'open';
+
             $nombresUnicos = array_unique($nombresDeUsers);
 
+            if($status == 'resolved'){
+                $comentario = "RESOLUCIÓN NOTIFICADA A CONTACTOS: " . implode(', ', $nombresUnicos) . ".";
+            }else{
+                $comentario = "NOTIFICACIÓN DE INCIDENTE A CONTACTOS: " . implode(', ', $nombresUnicos) . ".";
+            }
+
             $incident->comentarios()->create([
-                'description' => "Se despacharon alertas automáticas vía WhatsApp a los siguientes contactos: " . implode(', ', $nombresUnicos) . ".",
+                'description' => $comentario,
                 'created_at'  => now(),
                 'user_id'     => 3,
             ]);
