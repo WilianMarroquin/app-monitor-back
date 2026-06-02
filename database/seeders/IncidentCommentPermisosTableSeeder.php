@@ -31,7 +31,7 @@ class IncidentCommentPermisosTableSeeder extends Seeder
             ]);
         }
 
-        $admin = Role::where('name', Rol::ADMIN)
+        $admin = Rol::where('name', Rol::ADMINISTRADOR)
             ->first();
 
         $admin->givePermissionTo($permisos);
