@@ -14,21 +14,64 @@ class ServerTableSeeder extends Seeder
      */
     public function run()
     {
-        Server::firstOrCreate([
-            'name' => 'Apps2',
-            'internal_ip' => 'apps2.mineducgt.local'
-        ]);
-        Server::firstOrCreate([
-            'name' => 'AWS',
-            'internal_ip' => 'SISTEMA DE REGISTROS EDUCATIVOS ADMINISTRATIVO'
-        ]);
-        Server::firstOrCreate([
-            'name' => 'DEV-01',
-            'internal_ip' => '192.168.2.10'
-        ]);
-        Server::firstOrCreate([
-            'name' => 'sistemas5',
-            'internal_ip' => 'Sistemas5'
-        ]);
+        Server::firstOrCreate(
+            ['name' => 'frontesirh.mineducgt.local'],
+            [
+                'description' => 'frontesirh',
+                'internal_ip' => '192.168.100.101',
+                'external_ip' => null,
+                'entorno'     => 'produccion'
+            ]
+        );
+
+        Server::firstOrCreate(
+            ['name' => 'apps2.mineduc.gob.gt'],
+            [
+                'description' => 'apps2.mineduc',
+                'internal_ip' => '192.168.1.1',
+                'external_ip' => null,
+                'entorno'     => 'produccion'
+            ]
+        );
+
+        Server::firstOrCreate(
+            ['name' => 'sbm.mineduc.gob.gt'],
+            [
+                'description' => 'sbm.mineduc',
+                'internal_ip' => '192.168.1.1',
+                'external_ip' => null,
+                'entorno'     => 'produccion'
+            ]
+        );
+
+        Server::firstOrCreate(
+            ['name' => 'sire.mineduc.gob.gt'],
+            [
+                'description' => 'sire.mineduc.gob.gt',
+                'internal_ip' => '192.168.1.1',
+                'external_ip' => null,
+                'entorno'     => 'produccion'
+            ]
+        );
+
+        Server::firstOrCreate(
+            ['name' => 'Sistemas5'],
+            [
+                'description' => 'Sistemas5',
+                'internal_ip' => '192.168.1.23',
+                'external_ip' => null,
+                'entorno'     => 'produccion'
+            ]
+        );
+
+        Server::firstOrCreate(
+            ['name' => 'Sistemas'],
+            [
+                'description' => 'Sistemas',
+                'internal_ip' => '192.168.13.3',
+                'external_ip' => null,
+                'entorno'     => 'produccion'
+            ]
+        );
     }
 }

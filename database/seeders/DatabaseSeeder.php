@@ -19,15 +19,12 @@ class DatabaseSeeder extends Seeder
     {
 
         $this->call(IndexTableSeeder::class);
-        if(env('APP_ENV') === 'local') {
-            $this->call(ServerTableSeeder::class);
-            $this->call(ServiceTableSeeder::class);
-        }
-
-//        $this->migrarInformacion();
         $this->call(UserSeeder::class);
         $this->call(RolesPermisosBaseTableSeeder::class);
 
+        $this->call(AreasTableSeeder::class);
+        $this->call(ServerTableSeeder::class);
+        $this->call(ServiceTableSeeder::class);
     }
 
     public function migrarInformacion(): void

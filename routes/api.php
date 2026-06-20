@@ -37,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('uptime-response', [AnalyticsController::class, 'getUptimeAndResponse']);
         Route::get('failure-patterns', [AnalyticsController::class, 'getFailurePatterns']);
         Route::get('live-status', [AnalyticsController::class, 'getLiveStatus']);
+        Route::get('dashboard/summary', [AnalyticsController::class, 'getDashboardSummary']);
     });
 
     Route::middleware(['auth:sanctum', 'ability:monitor:access'])->group(function () {

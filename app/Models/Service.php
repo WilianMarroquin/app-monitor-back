@@ -178,8 +178,9 @@ class Service extends Model
         foreach ($this->areas as $area) {
             foreach ($area->contactosAsignados as $contacto) {
                 $contactos[] = [
-                    'name' => $contacto->nombre_completo,
-                    'telefono' => $contacto->telefono,
+                    'Id' => $contacto->id,
+                    'Name' => $contacto->nombre_completo,
+                    'Number' => $contacto->telefono,
                 ];
             }
         }

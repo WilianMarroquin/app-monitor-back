@@ -93,6 +93,11 @@ class AreaApiController extends AppbaseController implements HasMiddleware
     {
         $area = Area::findOrFail($id);
         $area->update($request->validated());
+
+        if(isset($request->personas_asignadas_ids)) {
+            $area->contactosAsignados()->sync($request->personas_asignadas_ids);
+        }
+
         return $this->sendResponse($area, 'Area actualizado con éxito.');
     }
 

@@ -10,6 +10,7 @@ use App\Http\Requests\Api\UpdateIncidentApiRequest;
 use App\Models\Incident;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 /**
@@ -44,7 +45,8 @@ class IncidentApiController extends AppbaseController implements HasMiddleware
                 'status',
                 'opened_at',
                 'resolved_at',
-                'service_id',
+                AllowedFilter::exact('service_id'),
+                AllowedFilter::scope('rangoFechas', 'rangoFechas'),
                 'ping_id'
             ])
             ->allowedSorts([
@@ -60,7 +62,7 @@ class IncidentApiController extends AppbaseController implements HasMiddleware
                 'service',
                 'comentarios.user'
             ])
-            ->defaultSort('-id') // Ordenar por defecto por fecha descendente
+            ->defaultSort('-id')
             ->jsonPaginate(request('page.size') ?? 10);
 
         return $this->sendResponse($incidents, 'incidents recuperados con éxito.');
@@ -89,6 +91,7 @@ class IncidentApiController extends AppbaseController implements HasMiddleware
         $incident->load([
             'service',
             'comentarios.user',
+            'contactosNotificados',
         ]);
 
         return $this->sendResponse($incident->toArray(), 'Incident recuperado con éxito.');
