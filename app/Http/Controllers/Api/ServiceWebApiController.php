@@ -24,11 +24,11 @@ class ServiceWebApiController extends AppbaseController implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:Listar Service Webes', only: ['index']),
-            new Middleware('permission:Ver Service Webes', only: ['show']),
-            new Middleware('permission:Crear Service Webes', only: ['store']),
-            new Middleware('permission:Editar Service Webes', only: ['update']),
-            new Middleware('permission:Eliminar Service Webes', only: ['destroy']),
+            new Middleware('abilities:Listar Service Webes', only: ['index']),
+            new Middleware('abilities:Ver Service Webes', only: ['show']),
+            new Middleware('abilities:Crear Service Webes', only: ['store']),
+            new Middleware('abilities:Editar Service Webes', only: ['update']),
+            new Middleware('abilities:Eliminar Service Webes', only: ['destroy']),
         ];
     }
 

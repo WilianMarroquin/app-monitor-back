@@ -26,11 +26,11 @@ class ServiceApiController extends AppbaseController implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:Listar Services', only: ['index']),
-            new Middleware('permission:Ver Services', only: ['show']),
-            new Middleware('permission:Crear Services', only: ['store']),
-            new Middleware('permission:Editar Services', only: ['update']),
-            new Middleware('permission:Eliminar Services', only: ['destroy']),
+            new Middleware('abilities:Listar Services', only: ['index']),
+            new Middleware('abilities:Ver Services', only: ['show']),
+            new Middleware('abilities:Crear Services', only: ['store']),
+            new Middleware('abilities:Editar Services', only: ['update']),
+            new Middleware('abilities:Eliminar Services', only: ['destroy']),
         ];
     }
 

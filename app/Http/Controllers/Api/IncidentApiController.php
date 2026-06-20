@@ -24,11 +24,11 @@ class IncidentApiController extends AppbaseController implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:Listar Incidentes', only: ['index']),
-            new Middleware('permission:Ver Incidentes', only: ['show']),
-            new Middleware('permission:Crear Incidentes', only: ['store']),
-            new Middleware('permission:Editar Incidentes', only: ['update']),
-            new Middleware('permission:Eliminar Incidentes', only: ['destroy']),
+            new Middleware('abilities:Listar Incidentes', only: ['index']),
+            new Middleware('abilities:Ver Incidentes', only: ['show']),
+            new Middleware('abilities:Crear Incidentes', only: ['store']),
+            new Middleware('abilities:Editar Incidentes', only: ['update']),
+            new Middleware('abilities:Eliminar Incidentes', only: ['destroy']),
         ];
     }
 

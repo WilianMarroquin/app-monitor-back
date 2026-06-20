@@ -24,11 +24,11 @@ class ServerApiController extends AppbaseController implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:Listar Serveres', only: ['index']),
-            new Middleware('permission:Ver Serveres', only: ['show']),
-            new Middleware('permission:Crear Serveres', only: ['store']),
-            new Middleware('permission:Editar Serveres', only: ['update']),
-            new Middleware('permission:Eliminar Serveres', only: ['destroy']),
+            new Middleware('abilities:Listar Serveres', only: ['index']),
+            new Middleware('abilities:Ver Serveres', only: ['show']),
+            new Middleware('abilities:Crear Serveres', only: ['store']),
+            new Middleware('abilities:Editar Serveres', only: ['update']),
+            new Middleware('abilities:Eliminar Serveres', only: ['destroy']),
         ];
     }
 

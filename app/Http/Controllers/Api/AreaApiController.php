@@ -24,11 +24,11 @@ class AreaApiController extends AppbaseController implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:Listar Areas', only: ['index']),
-            new Middleware('permission:Ver Areas', only: ['show']),
-            new Middleware('permission:Crear Areas', only: ['store']),
-            new Middleware('permission:Editar Areas', only: ['update']),
-            new Middleware('permission:Eliminar Areas', only: ['destroy']),
+            new Middleware('abilities:Listar Areas', only: ['index']),
+            new Middleware('abilities:Ver Areas', only: ['show']),
+            new Middleware('abilities:Crear Areas', only: ['store']),
+            new Middleware('abilities:Editar Areas', only: ['update']),
+            new Middleware('abilities:Eliminar Areas', only: ['destroy']),
         ];
     }
 

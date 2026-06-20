@@ -24,12 +24,12 @@ class ConfiguracionApiController extends AppbaseController implements HasMiddlew
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:Listar Configuraciones', only: ['index']),
-            new Middleware('permission:Ver Configuraciones', only: ['show']),
-            new Middleware('permission:Crear Configuraciones', only: ['store']),
-            new Middleware('permission:Editar Configuraciones', only: ['update']),
-            new Middleware('permission:Actualizar Configuraciones generales', only: ['guardarGenerales']),
-            new Middleware('permission:Eliminar Configuraciones', only: ['destroy']),
+            new Middleware('abilities:Listar Configuraciones', only: ['index']),
+            new Middleware('abilities:Ver Configuraciones', only: ['show']),
+            new Middleware('abilities:Crear Configuraciones', only: ['store']),
+            new Middleware('abilities:Editar Configuraciones', only: ['update']),
+            new Middleware('abilities:Actualizar Configuraciones generales', only: ['guardarGenerales']),
+            new Middleware('abilities:Eliminar Configuraciones', only: ['destroy']),
         ];
     }
 

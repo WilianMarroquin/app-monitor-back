@@ -25,11 +25,11 @@ class NotificationContactApiController extends AppbaseController implements HasM
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:Listar Notification Contactes', only: ['index']),
-            new Middleware('permission:Ver Notification Contactes', only: ['show']),
-            new Middleware('permission:Crear Notification Contactes', only: ['store']),
-            new Middleware('permission:Editar Notification Contactes', only: ['update']),
-            new Middleware('permission:Eliminar Notification Contactes', only: ['destroy']),
+            new Middleware('abilities:Listar Notification Contactes', only: ['index']),
+            new Middleware('abilities:Ver Notification Contactes', only: ['show']),
+            new Middleware('abilities:Crear Notification Contactes', only: ['store']),
+            new Middleware('abilities:Editar Notification Contactes', only: ['update']),
+            new Middleware('abilities:Eliminar Notification Contactes', only: ['destroy']),
         ];
     }
 

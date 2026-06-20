@@ -24,11 +24,11 @@ class IncidentCommentApiController extends AppbaseController implements HasMiddl
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:Listar Incident Commentes', only: ['index']),
-            new Middleware('permission:Ver Incident Commentes', only: ['show']),
-            new Middleware('permission:Crear Incident Commentes', only: ['store']),
-            new Middleware('permission:Editar Incident Commentes', only: ['update']),
-            new Middleware('permission:Eliminar Incident Commentes', only: ['destroy']),
+            new Middleware('abilities:Listar Incident Commentes', only: ['index']),
+            new Middleware('abilities:Ver Incident Commentes', only: ['show']),
+            new Middleware('abilities:Crear Incident Commentes', only: ['store']),
+            new Middleware('abilities:Editar Incident Commentes', only: ['update']),
+            new Middleware('abilities:Eliminar Incident Commentes', only: ['destroy']),
         ];
     }
 

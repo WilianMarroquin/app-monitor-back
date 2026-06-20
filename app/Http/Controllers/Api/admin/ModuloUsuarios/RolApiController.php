@@ -24,11 +24,11 @@ class RolApiController extends AppbaseController implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:Listar Roles', only: ['index']),
-            new Middleware('permission:Ver Roles', only: ['index', 'show']),
-            new Middleware('permission:Crear Roles', only: ['store']),
-            new Middleware('permission:Editar Roles', only: ['update']),
-            new Middleware('permission:Eliminar Roles', only: ['destroy']),
+            new Middleware('abilities:Listar Roles', only: ['index']),
+            new Middleware('abilities:Ver Roles', only: ['index', 'show']),
+            new Middleware('abilities:Crear Roles', only: ['store']),
+            new Middleware('abilities:Editar Roles', only: ['update']),
+            new Middleware('abilities:Eliminar Roles', only: ['destroy']),
         ];
     }
 

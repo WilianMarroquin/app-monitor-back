@@ -24,11 +24,11 @@ class ServiceDatabaseApiController extends AppbaseController implements HasMiddl
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:Listar Service Databases', only: ['index']),
-            new Middleware('permission:Ver Service Databases', only: ['show']),
-            new Middleware('permission:Crear Service Databases', only: ['store']),
-            new Middleware('permission:Editar Service Databases', only: ['update']),
-            new Middleware('permission:Eliminar Service Databases', only: ['destroy']),
+            new Middleware('abilities:Listar Service Databases', only: ['index']),
+            new Middleware('abilities:Ver Service Databases', only: ['show']),
+            new Middleware('abilities:Crear Service Databases', only: ['store']),
+            new Middleware('abilities:Editar Service Databases', only: ['update']),
+            new Middleware('abilities:Eliminar Service Databases', only: ['destroy']),
         ];
     }
 

@@ -24,11 +24,11 @@ class ServiceLogApiController extends AppbaseController implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:Listar Service Loges', only: ['index']),
-            new Middleware('permission:Ver Service Loges', only: ['show']),
-            new Middleware('permission:Crear Service Loges', only: ['store']),
-            new Middleware('permission:Editar Service Loges', only: ['update']),
-            new Middleware('permission:Eliminar Service Loges', only: ['destroy']),
+            new Middleware('abilities:Listar Service Loges', only: ['index']),
+            new Middleware('abilities:Ver Service Loges', only: ['show']),
+            new Middleware('abilities:Crear Service Loges', only: ['store']),
+            new Middleware('abilities:Editar Service Loges', only: ['update']),
+            new Middleware('abilities:Eliminar Service Loges', only: ['destroy']),
         ];
     }
 

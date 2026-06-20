@@ -13,11 +13,17 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): Response
+    public function store(LoginRequest $request)
     {
-        $request->authenticate();
+        $token = $request->authenticate();
 
-        $request->session()->regenerate();
+        if ($token) {
+            // MODO Token: Retorna JSON con el token
+            return response()->json([
+                'token' => $token,
+                'message' => 'Autenticación exitosa',
+            ]);
+        }
 
         return response()->noContent();
     }
@@ -27,12 +33,24 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): Response
     {
-        Auth::guard('web')->logout();
+        $user = $request->user();
 
-        $request->session()->invalidate();
+        // 🔹 Si viene con token (Passport/Sanctum)
+        if ($user && method_exists($user, 'currentAccessToken') && $user->currentAccessToken()) {
+            $user->currentAccessToken()->delete();
+            return response()->noContent();
+        }
 
-        $request->session()->regenerateToken();
+        // 🔹 Si viene con sesión web (guard web)
+        if (Auth::guard('web')->check()) {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return response()->noContent();
+        }
 
+        // 🔹 Si no estaba autenticado
         return response()->noContent();
     }
+
 }
