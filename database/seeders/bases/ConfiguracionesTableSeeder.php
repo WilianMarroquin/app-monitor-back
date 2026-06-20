@@ -21,7 +21,7 @@ class ConfiguracionesTableSeeder extends Seeder
 
         Configuracion::firstOrCreate([
             'key' => 'nombre_aplicacion',
-            'value' => 'Monitor',
+            'value' => 'MonitorPlus',
             'descripcion' => 'Nombre de la empresa'
         ]);
 
@@ -39,7 +39,7 @@ class ConfiguracionesTableSeeder extends Seeder
 
         Configuracion::firstOrCreate([
             'key' => 'eslogan_aplicacion',
-            'value' => 'El mejor sistema del mundo!',
+            'value' => 'La evolución del monitoreo inteligente.',
             'descripcion' => 'Eslogan de la empresa'
         ]);
 
